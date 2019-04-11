@@ -25,6 +25,7 @@ plot(network,
      vertex.label=LETTERS[1:10],                   # Character vector used to label the nodes
      vertex.label.color="white",
      vertex.label.family="mono",                   # Font family of the label (e.g.“Times”, “Helvetica”)
+     vertex.label.family="mono",                   # Font family of the label (e.g.“Times”, “Helvetica”)
      vertex.label.font=2,                          # Font: 1 plain, 2 bold, 3, italic, 4 bold italic, 5 symbol
      vertex.label.cex=1,                           # Font size (multiplication factor, device-dependent)
      vertex.label.dist=0,                          # Distance between the label and the vertex
