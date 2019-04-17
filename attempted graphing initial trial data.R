@@ -1,4 +1,4 @@
-library(tidyverse)
+library(dplyr)
 library(readxl)
 library(igraph)
 
@@ -7,19 +7,19 @@ library(igraph)
 # Import and clean dataset -----------------------------------------------------------------------------------
 
 
-trial1 <- read_xlsx("Refs full (08.04.19).xlsx", sheet = "Clean References ")  # import 'Clean References' sheet
-
-colnames(trial1) <- colnames(trial1) %>% gsub(" ", "_", .)  # change spaces to '_' in colnames for simplicity
-
-trial2 <- trial1 %>%   # remove rows heading up each document, remove duplicates, fill in 0s for now
-  filter(!is.na(WHO_2014)) %>% 
-  select(-NHS_2017, -ACS_2018) %>% 
-  unique() %>% 
-  replace(is.na(.), 0)
-
-trial3 <- trial2 %>%  # papers cited by more than 1
-  mutate(nrefs = rowSums(.[2:17])) %>% 
-  filter(nrefs>1)
+# trial1 <- read_xlsx("Refs full (08.04.19).xlsx", sheet = "Clean References ")  # import 'Clean References' sheet
+# 
+# colnames(trial1) <- colnames(trial1) %>% gsub(" ", "_", .)  # change spaces to '_' in colnames for simplicity
+# 
+# trial2 <- trial1 %>%   # remove rows heading up each document, remove duplicates, fill in 0s for now
+#   filter(!is.na(WHO_2014)) %>% 
+#   select(-NHS_2017, -ACS_2018) %>% 
+#   unique() %>% 
+#   replace(is.na(.), 0)
+# 
+# trial3 <- trial2 %>%  # papers cited by more than 1
+#   mutate(nrefs = rowSums(.[2:17])) %>% 
+#   filter(nrefs>1)
 
 
 
@@ -50,14 +50,15 @@ V(imatrix3a)
 E(imatrix3a)
 
 
-V(imatrix3a)$color[1:73] <- "#00386580"  # University Blue
-V(imatrix3a)$color[74:89] <- "#FFDC3680"  # Sunshine Yellow
+V(imatrix3a)$color[1:73] <- sphsu_cols("leaf") # University Blue
+V(imatrix3a)$color[74:89] <- "#FFDC36FF"  # Sunshine Yellow
 V(imatrix3a)$size[1:73] <- 2
-V(imatrix3a)$size[74:89] <- 10
+V(imatrix3a)$size[74:89] <- 12
 V(imatrix3a)$label[1:73] <- NA
 V(imatrix3a)$label[74:89] <- V(imatrix3a)$name[74:89]
 V(imatrix3a)$frame.color <- NA
-V(imatrix3a)$label.cex <- 0.4
+V(imatrix3a)$label.cex <- 0.3
+E(imatrix3a)$color <- "#C0C0C080"
 
 pdf('filtered.pdf')
 plot(imatrix3a, layout = layout.fruchterman.reingold)
@@ -86,14 +87,15 @@ imatrix3b <- graph.incidence(matrix3b, mode = "all")  # igraph matrix
 V(imatrix3b)
 E(imatrix3b)
 
-V(imatrix3b)$color[1:2435] <- "#00386580"  # University Blue
-V(imatrix3b)$color[2435:2450] <- "#FFDC3680"  # Sunshine Yellow
+V(imatrix3b)$color[1:2434] <- sphsu_cols("leaf")  # University Blue
+V(imatrix3b)$color[2435:2450] <- sphsu_cols("sunshine") # Sunshine Yellow
 V(imatrix3b)$size[1:2434] <- 2
-V(imatrix3b)$size[2435:2450] <- 10
+V(imatrix3b)$size[2435:2450] <- 12
 V(imatrix3b)$label[1:2434] <- NA
 V(imatrix3b)$label[2435:2450] <- V(imatrix3b)$name[2435:2450]
 V(imatrix3b)$frame.color <- NA
-V(imatrix3b)$label.cex <- 0.4
+V(imatrix3b)$label.cex <- 0.3
+E(imatrix3b)$color<-"#C0C0C080"
 
 pdf('unfiltered.pdf')
 plot(imatrix3b, layout = layout.fruchterman.reingold)
@@ -127,11 +129,12 @@ E(imatrix3f)
 
 
 V(imatrix3f)$color[1:73] <- "white"
-V(imatrix3f)$color[74:89] <- "#FFDC3680"  # Sunshine Yellow
+V(imatrix3f)$color[74:89] <- "#FFDC36FF"  # Sunshine Yellow
 V(imatrix3f)$size[1:73] <- 4
-V(imatrix3f)$size[74:89] <- 10
+V(imatrix3f)$size[74:89] <- 12
 V(imatrix3f)$frame.color <- NA
-V(imatrix3f)$label.cex <- 0.4
+V(imatrix3f)$label.cex <- 0.3
+E(imatrix3b)$color<-"#C0C0C080"
 
 pdf('filteredposh.pdf')
 plot(imatrix3f, layout = layout.fruchterman.reingold)
@@ -141,8 +144,7 @@ pdf('filteredposh2.pdf')
 plot(imatrix3f, layout = layout.kamada.kawai)
 dev.off()
 
-dff %>%
-  select(id, Reference)
+write.csv(dff %>% select(id, Reference),"refs table filtered posh.csv" )
 
 # Two mode graph ---------------------------------------------------------------------------------------------
 
