@@ -1,3 +1,14 @@
+library(dplyr)
+library(readxl)
+library(igraph)
+
+
+
+# Import and clean dataset -----------------------------------------------------------------------------------
+
+
+trial1 <- read_xlsx("N:/PhD/Methods/Citation Anlaysis/Refs full (08.04.19).xlsx", sheet = "Clean References ")  # import 'Clean References' sheet
+
 df <- trial1[1:2887, ]
 
 index <- which(is.na(df$Reference))
@@ -27,3 +38,20 @@ dfd <- dfc %>%
   unique() %>% 
   filter(Reference != "x") %>% 
   replace(is.na(.), 0)
+
+dfe <- dfd %>% 
+  filter(NHS.2017 == 0) %>% 
+  select(-NHS.2017) %>% 
+  mutate(nrefs = rowSums(.[2:17]))
+
+row_names_dfe <- dfe %>% 
+  filter(nrefs >= 3) %>% 
+  pull(Reference)
+
+
+matrixe <- dfe %>%
+  filter(nrefs >= 3) %>% 
+  select(-Reference, -nrefs) %>% 
+  as.matrix
+
+rownames(matrixe) <- row_names_dfe
