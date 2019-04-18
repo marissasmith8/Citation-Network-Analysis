@@ -1,6 +1,7 @@
 library(dplyr)
 library(readxl)
 library(igraph)
+library(SPHSUgraphs)
 
 
 
@@ -44,18 +45,25 @@ rownames(matrixe) <- row_names_dfe
 
 # Graphing where more than two citing paper ------------------------------------------------------------------
 
+matrixe <- dfe %>%
+  filter(nrefs >= 3) %>% 
+  select(-Reference, -nrefs, -colour) %>% 
+  as.matrix
+
+rownames(matrixe) <- row_names_dfe
+
 imatrix3a <- graph.incidence(matrixe, mode = "all")  # igraph matrix
 # imatrix3 <- delete.vertices(imatrix3, V(imatrix3)[degree(imatrix3)==0])
 V(imatrix3a)
 E(imatrix3a)
 
 
-V(imatrix3a)$color[1:73] <- sphsu_cols("leaf") # University Blue
-V(imatrix3a)$color[74:89] <- "#FFDC36FF"  # Sunshine Yellow
-V(imatrix3a)$size[1:73] <- 2
-V(imatrix3a)$size[74:89] <- 12
-V(imatrix3a)$label[1:73] <- NA
-V(imatrix3a)$label[74:89] <- V(imatrix3a)$name[74:89]
+V(imatrix3a)$color[1:nrow(matrixe)] <- sphsu_cols("thistle") # University Blue
+V(imatrix3a)$color[(nrow(matrixe)+1):(nrow(matrixe)+ncol(matrixe))] <- sphsu_cols("sunshine")  # Sunshine Yellow
+V(imatrix3a)$size[1:nrow(matrixe)] <- 2
+V(imatrix3a)$size[(nrow(matrixe)+1):(nrow(matrixe)+ncol(matrixe))] <- 12
+V(imatrix3a)$label[1:nrow(matrixe)] <- NA
+V(imatrix3a)$label[(nrow(matrixe)+1):(nrow(matrixe)+ncol(matrixe))] <- V(imatrix3a)$name[(nrow(matrixe)+1):(nrow(matrixe)+ncol(matrixe))]
 V(imatrix3a)$frame.color <- NA
 V(imatrix3a)$label.cex <- 0.3
 E(imatrix3a)$color <- "#C0C0C080"
@@ -77,7 +85,7 @@ row_names_df3b <- dfe %>%
 
 
 matrix3b <- dfe %>%
-  select(-Reference, -nrefs) %>% 
+  select(-Reference, -nrefs, -colour) %>% 
   as.matrix
 
 rownames(matrix3b) <- row_names_df3b
@@ -87,12 +95,12 @@ imatrix3b <- graph.incidence(matrix3b, mode = "all")  # igraph matrix
 V(imatrix3b)
 E(imatrix3b)
 
-V(imatrix3b)$color[1:2434] <- sphsu_cols("leaf")  # University Blue
-V(imatrix3b)$color[2435:2450] <- sphsu_cols("sunshine") # Sunshine Yellow
-V(imatrix3b)$size[1:2434] <- 2
-V(imatrix3b)$size[2435:2450] <- 12
-V(imatrix3b)$label[1:2434] <- NA
-V(imatrix3b)$label[2435:2450] <- V(imatrix3b)$name[2435:2450]
+V(imatrix3b)$color[1:nrow(matrix3b)] <- sphsu_cols("leaf")  # University Blue
+V(imatrix3b)$color[(nrow(matrix3b)+1):(nrow(matrix3b)+ncol(matrix3b))] <- sphsu_cols("sunshine") # Sunshine Yellow
+V(imatrix3b)$size[1:nrow(matrix3b)] <- 2
+V(imatrix3b)$size[(nrow(matrix3b)+1):(nrow(matrix3b)+ncol(matrix3b))] <- 12
+V(imatrix3b)$label[1:nrow(matrix3b)] <- NA
+V(imatrix3b)$label[(nrow(matrix3b)+1):(nrow(matrix3b)+ncol(matrix3b))] <- V(imatrix3b)$name[(nrow(matrix3b)+1):(nrow(matrix3b)+ncol(matrix3b))]
 V(imatrix3b)$frame.color <- NA
 V(imatrix3b)$label.cex <- 0.3
 E(imatrix3b)$color<-"#C0C0C080"
@@ -117,7 +125,7 @@ row_names_df3f <- dff %>%
 
 
 matrix3f <- dff %>%
-  select(-Reference, -nrefs, -id) %>% 
+  select(-Reference, -nrefs, -id, -colour) %>% 
   as.matrix
 
 rownames(matrix3f) <- row_names_df3f
@@ -128,10 +136,10 @@ V(imatrix3f)
 E(imatrix3f)
 
 
-V(imatrix3f)$color[1:73] <- "white"
-V(imatrix3f)$color[74:89] <- "#FFDC36FF"  # Sunshine Yellow
-V(imatrix3f)$size[1:73] <- 4
-V(imatrix3f)$size[74:89] <- 12
+V(imatrix3f)$color[1:nrow(matrix3f)] <- "white"
+V(imatrix3f)$color[(nrow(matrix3f)+1):(nrow(matrix3f)+ncol(matrix3f))] <- "#FFDC36FF"  # Sunshine Yellow
+V(imatrix3f)$size[1:nrow(matrix3f)] <- 4
+V(imatrix3f)$size[(nrow(matrix3f)+1):(nrow(matrix3f)+ncol(matrix3f))] <- 12
 V(imatrix3f)$frame.color <- NA
 V(imatrix3f)$label.cex <- 0.3
 E(imatrix3b)$color<-"#C0C0C080"
@@ -198,4 +206,83 @@ E(oneImatrix)$color <- rgb(0.8,0.2,0,egam)
 
 pdf('one.pdf')
 plot(oneImatrix, layout = layout.fruchterman.reingold)
+dev.off()
+
+# Coloured reordered Messy ----------------------------------------------------------
+
+dffr <- dfer %>% arrange(nrefs)
+
+row_names_df3br <- dffr %>% 
+  pull(Reference)
+
+
+matrix3br <- dffr %>%
+  select(-Reference, -nrefs) %>% 
+  as.matrix
+
+rownames(matrix3br) <- row_names_df3br
+
+imatrix3br <- graph.incidence(matrix3br, mode = "all")  # igraph matrix
+# imatrix3 <- delete.vertices(imatrix3, V(imatrix3)[degree(imatrix3)==0])
+V(imatrix3br)
+E(imatrix3br)
+
+V(imatrix3br)$color[1:nrow(matrix3br)] <- dfe$colour
+V(imatrix3br)$color[(nrow(matrix3br)+1):(nrow(matrix3br)+ncol(matrix3br))] <- sphsu_cols("sunshine") # Sunshine Yellow
+V(imatrix3br)$size[1:nrow(matrix3br)] <- 2
+V(imatrix3br)$size[(nrow(matrix3br)+1):(nrow(matrix3br)+ncol(matrix3br))] <- 12
+V(imatrix3br)$label[1:nrow(matrix3br)] <- NA
+V(imatrix3br)$label[(nrow(matrix3br)+1):(nrow(matrix3br)+ncol(matrix3br))] <- V(imatrix3br)$name[(nrow(matrix3br)+1):(nrow(matrix3br)+ncol(matrix3br))]
+V(imatrix3br)$frame.color <- NA
+V(imatrix3br)$label.cex <- 0.3
+E(imatrix3br)$color<-"#C0C0C080"
+
+pdf('unfiltered.pdf')
+plot(imatrix3br, layout = layout.fruchterman.reingold)
+dev.off()
+
+pdf('unfiltered2.pdf')
+plot(imatrix3br, layout = layout.kamada.kawai)
+dev.off()
+
+pdf('unfiltered3.pdf')
+plot(imatrix3br, layout = layout.gem)
+dev.off()
+
+
+# Coloured unfiltered -----------------------------------------------------
+
+
+
+row_names_df3b <- dfe %>% 
+  pull(Reference)
+
+
+matrix3b <- dfe %>%
+  select(-Reference, -nrefs, -colour) %>% 
+  as.matrix
+
+rownames(matrix3b) <- row_names_df3b
+
+imatrix3b <- graph.incidence(matrix3b, mode = "all")  # igraph matrix
+# imatrix3 <- delete.vertices(imatrix3, V(imatrix3)[degree(imatrix3)==0])
+V(imatrix3b)
+E(imatrix3b)
+
+V(imatrix3b)$color[1:nrow(matrix3b)] <- dfe$colour
+V(imatrix3b)$color[(nrow(matrix3b)+1):(nrow(matrix3b)+ncol(matrix3b))] <- sphsu_cols("sunshine") # Sunshine Yellow
+V(imatrix3b)$size[1:nrow(matrix3b)] <- 2
+V(imatrix3b)$size[(nrow(matrix3b)+1):(nrow(matrix3b)+ncol(matrix3b))] <- 12
+V(imatrix3b)$label[1:nrow(matrix3b)] <- NA
+V(imatrix3b)$label[(nrow(matrix3b)+1):(nrow(matrix3b)+ncol(matrix3b))] <- V(imatrix3b)$name[(nrow(matrix3b)+1):(nrow(matrix3b)+ncol(matrix3b))]
+V(imatrix3b)$frame.color <- NA
+V(imatrix3b)$label.cex <- 0.3
+E(imatrix3b)$color<-"#C0C0C080"
+
+pdf('unfiltered.pdf')
+plot(imatrix3b, layout = layout.fruchterman.reingold)
+dev.off()
+
+pdf('unfiltered2.pdf')
+plot(imatrix3b, layout = layout.kamada.kawai)
 dev.off()
