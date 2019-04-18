@@ -93,4 +93,20 @@ row_names_dfer <- dfer %>%
 
 # Top cited ---------------------------------------------------------------
 
-dfb
+rownames(matrixe) <- row_names_dfe
+
+
+# Adding column of paper referencing -------------------------------------------------------------------------
+
+dfb2 <- lapply(dfb, function(x) mutate(x,Paper = names(x)[2]))
+
+df_originalrefs <- purrr::reduce(dfb2, bind_rows) %>% select(Reference, Paper)
+
+dfd %>% 
+  mutate(nrefs = rowSums(.[2:18])) %>% 
+  full_join(df_originalrefs, by = "Reference") %>% 
+  filter(NHS.2017 == 0) %>% 
+  select(Paper, Reference, nrefs) %>%
+  group_by(Paper) %>% 
+  top_n(3)  %>% # To show top 3 cited papers in each
+  arrange(Paper, desc(nrefs))
