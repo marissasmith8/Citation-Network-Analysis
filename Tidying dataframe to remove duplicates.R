@@ -29,7 +29,7 @@ for (p in 1:17) {
 
 dfb <- lapply(dfa, na.omit)
 
-dfbr <- dfb[c(3:17, 1:2)]
+# dfbr <- dfb[c(3:17, 1:2)]
 
 # Original order ----------------------------------------------------------
 
@@ -52,9 +52,7 @@ dfe <- dfd %>%
   filter(NHS.2017 == 0) %>% 
   select(-NHS.2017) %>% 
   mutate(nrefs = rowSums(.[2:17])) %>% 
-  mutate(colour = ifelse(nrefs == 1, sphsu_cols("leaf"),
-                         ifelse(nrefs == 2, sphsu_cols("turquoise"),
-                         sphsu_cols("thistle"))))
+  full_join(fill_dataframe, by = "nrefs")
 
 row_names_dfe <- dfe %>% 
   filter(nrefs >= 3) %>% 
@@ -81,19 +79,14 @@ dfdr <- dfcr %>%
 dfer <- dfdr %>% 
   filter(NHS.2017 == 0) %>% 
   select(-NHS.2017) %>% 
-  mutate(nrefs = rowSums(.[2:17])) %>% 
-  mutate(colour = ifelse(nrefs == 1, sphsu_cols("leaf"),
-                         ifelse(nrefs == 2, sphsu_cols("turquoise"),
-                                sphsu_cols("thistle"))))
+  mutate(nrefs = rowSums(.[2:17]))  %>% 
+  full_join(fill_dataframe, by = "nrefs")
 
 row_names_dfer <- dfer %>% 
   filter(nrefs >= 3) %>% 
   pull(Reference)
 
 
-# Top cited ---------------------------------------------------------------
-
-rownames(matrixe) <- row_names_dfe
 
 
 # Adding column of paper referencing -------------------------------------------------------------------------
