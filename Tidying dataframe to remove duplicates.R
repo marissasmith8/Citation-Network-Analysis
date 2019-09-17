@@ -7,7 +7,7 @@ library(purrr)
 # Import and clean dataset -----------------------------------------------------------------------------------
 
 
-trial1 <- read_xlsx("Refs full (08.04.19).xlsx", sheet = "Clean References ")  # import 'Clean References' sheet
+trial1 <- read_xlsx("Refs full (08.04.19) - 2.xlsx", sheet = "Clean References ")  # import 'Clean References' sheet
 # fulltextrefs <- read_xlsx("Refs full (08.04.19).xlsx", sheet = "Full References ")  # import 'Full References' sheet
 
 df <- trial1[1:2887, ]
@@ -26,9 +26,14 @@ for (p in 1:17) {
   i <- index[p]
 }
 
-dfb <- lapply(dfa, na.omit)
+k <- 0
+for (k in 1:17) {
+  dfa[[k]][[2]] <- 1
+  dfa[[k]] <- dfa[[k]][-1,]
+}
 
-# dfbr <- dfb[c(3:17, 1:2)]
+
+# dfa now works!
 
 # Original order ----------------------------------------------------------
 
@@ -39,7 +44,7 @@ q <- 1
 
 for (q in 1:length(dfb)) {
   dfc <- dfc %>% 
-    full_join(dfb[[q]], by = "Reference")
+    full_join(dfa[[q]], by = "Reference")
 }
 
 dfd <- dfc %>% 
@@ -49,12 +54,28 @@ dfd <- dfc %>%
 
 dfe <- dfd %>% 
   mutate(nrefs = rowSums(.[2:17])) %>% 
-  full_join(fill_dataframe, by = "nrefs")
+  full_join(fill_dataframe, by = "nrefs") %>% 
+  filter(Reference != "No references given")
 
 row_names_dfe <- dfe %>% 
   filter(nrefs >= 3) %>% 
   pull(Reference)
 
+
+
+# detect approximate duplicates ------------------------------------------------------------------------------
+possibleDups <- list()
+
+for (l in 1:(nrow(dfe)-1)) {
+  for (m in 1:(nrow(dfe)-l)){
+  dups <- agrep(dfe[[l, "Reference"]], dfe[[m+l, "Reference"]], value = TRUE)
+  }
+  if(length(dups) != 1){
+    possibleDups[[l]] <- dups[dups != l]
+  } else {
+    possibleDups[[l]] <- NA
+  }
+}
 
 # Reordered dataset -------------------------------------------------------
 
