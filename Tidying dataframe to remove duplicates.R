@@ -1,24 +1,23 @@
 library(dplyr)
 library(readxl)
 library(igraph)
-
+library(purrr)
 
 
 # Import and clean dataset -----------------------------------------------------------------------------------
 
 
-trial1 <- read_xlsx("N:/PhD/Methods/Citation Anlaysis/Refs full (08.04.19).xlsx", sheet = "Clean References ")  # import 'Clean References' sheet
-fulltextrefs <- read_xlsx("N:/PhD/Methods/Citation Anlaysis/Refs full (08.04.19).xlsx", sheet = "Full References ")  # import 'Full References' sheet
+trial1 <- read_xlsx("Refs full (08.04.19).xlsx", sheet = "Clean References ")  # import 'Clean References' sheet
+# fulltextrefs <- read_xlsx("Refs full (08.04.19).xlsx", sheet = "Full References ")  # import 'Full References' sheet
 
-df <- trial1[1:2886, ]
+df <- trial1[1:2887, ]
 
 index <- which(is.na(df$Reference))
 
-i <- 0
-dfa <- list()
-
 dffiltered <- select(df, -`ACS 2018`)
 
+i <- 0
+dfa <- list()
 
 for (p in 1:17) {
   i <- i+1
@@ -34,7 +33,7 @@ dfb <- lapply(dfa, na.omit)
 # Original order ----------------------------------------------------------
 
 
-dfc <- tibble(Reference = "x")
+dfc <- tibble(Reference = as.character())
 
 q <- 1
 
@@ -45,12 +44,10 @@ for (q in 1:length(dfb)) {
 
 dfd <- dfc %>% 
   unique() %>% 
-  filter(Reference != "x") %>% 
+  select(-NHS.2017) %>% 
   replace(is.na(.), 0)
 
 dfe <- dfd %>% 
-  filter(NHS.2017 == 0) %>% 
-  select(-NHS.2017) %>% 
   mutate(nrefs = rowSums(.[2:17])) %>% 
   full_join(fill_dataframe, by = "nrefs")
 
@@ -62,7 +59,7 @@ row_names_dfe <- dfe %>%
 # Reordered dataset -------------------------------------------------------
 
 
-dfcr <- tibble(Reference = "x")
+dfcr <- tibble(Reference = as.character())
 
 q <- 1
 
