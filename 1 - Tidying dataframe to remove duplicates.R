@@ -1,13 +1,14 @@
 library(dplyr)
 library(readxl)
 library(igraph)
-library(purrr)
 
+#  This script imports the data and creates a dataframe of all refs/reports
+#  
 
 # Import and clean dataset -----------------------------------------------------------------------------------
 
 
-trial1 <- read_xlsx("Refs full (08.04.19) - 2.xlsx", sheet = "Clean References ")  # import 'Clean References' sheet
+trial1 <- read_xlsx("Refs full - corrected.xlsx", sheet = "Clean References ")  # import 'Clean References' sheet
 # fulltextrefs <- read_xlsx("Refs full (08.04.19).xlsx", sheet = "Full References ")  # import 'Full References' sheet
 
 df <- trial1[1:2887, ]
@@ -63,21 +64,30 @@ row_names_dfe <- dfe %>%
 
 
 
-# detect approximate duplicates ------------------------------------------------------------------------------
+# detect approximate duplicates - not used ------------------------------------------------------------------------------
 possibleDups <- list()
 
 for (l in 1:(nrow(dfe)-1)) {
-  for (m in 1:(nrow(dfe)-l)){
-  dups <- agrep(dfe[[l, "Reference"]], dfe[[m+l, "Reference"]], value = TRUE)
-  }
-  if(length(dups) != 1){
-    possibleDups[[l]] <- dups[dups != l]
+
+  dups <- agrep(dfe[[l, "Reference"]], dfe$Reference[l:nrow(dfe)], value = TRUE)
+  dups <- dups[grepl(gsub("^.*(\\(.*\\))$", "\\1", dfe[[l, "Reference"]]), gsub("^.*(\\(.*\\))$", "\\1", dups), dups, fixed = TRUE)]
+  dups <- dups[grepl(gsub("^(\\D).*$", "\\1", dfe[[l, "Reference"]]), gsub("^(\\D).*$", "\\1", dups), dups, fixed = TRUE)]
+
+  if(length(dups) > 1){
+    possibleDups[[l]] <- dups
   } else {
     possibleDups[[l]] <- NA
   }
 }
 
-# Reordered dataset -------------------------------------------------------
+tidyDups <- discard(possibleDups, anyNA)
+
+output_duplicates <- tidyDups %>% map(function(x) tibble(a = 1:length(x), b = x) %>% tidyr::spread(a,b)) %>% 
+  reduce(bind_rows)
+
+write.csv(output_duplicates, file = "output duplicates.csv", row.names = FALSE)
+
+# Reordered dataset - not used -------------------------------------------------------
 
 
 dfcr <- tibble(Reference = as.character())
@@ -107,7 +117,7 @@ row_names_dfer <- dfer %>%
 
 
 
-# Adding column of paper referencing -------------------------------------------------------------------------
+# Adding column of paper referencing - not used -------------------------------------------------------------------------
 
 dfb2 <- lapply(dfb, function(x) mutate(x,Paper = names(x)[2]))
 
