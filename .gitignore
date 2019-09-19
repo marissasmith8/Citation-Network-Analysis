@@ -3,3 +3,6 @@
 .RData
 .Ruserdata
 *.pdf
+*.svg
+*.png
+*.emf
