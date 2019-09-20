@@ -148,7 +148,88 @@ dev.off()
 
 # filtered df and matrix -------------------------------------------------------------------------------------
 
+dfe_filtered <- dfe_ordered %>% filter(nrefs>2)
+
+mt_fl_so <- dfe_filtered %>% 
+  select(-Reference, -nrefs, -fill) %>% 
+  as.matrix()
+
+row.names(mt_fl_so) <- dfe_filtered$Reference
+colnames(mt_fl_so) <- reports_formatted
 
 # **igraph 3 - filtered and coloured -------------------------------------------------------------------------
 
+ig_fl_so <- graph.incidence(mt_fl_so, mode = "all")
+
+refs3 <- 1:nrow(dfe_filtered)
+gls3 <- (nrow(dfe_filtered)+1):length(V(ig_fl_so))
+
+# gl points
+V(ig_fl_so)$label[gls3] <- reports_formatted
+V(ig_fl_so)$color[gls3] <- sphsu_cols("sunshine")
+V(ig_fl_so)$size[gls3] <- 12
+
+# ref points
+V(ig_fl_so)$label[refs3] <- NA 
+V(ig_fl_so)$color[refs3] <- dfe_filtered$fill
+V(ig_fl_so)$size[refs3] <- 2
+
+# all points
+V(ig_fl_so)$frame.color <- NA
+V(ig_fl_so)$label.cex <- 0.3
+
+#  edges
+E(ig_fl_so)$color <- "#DDDDDD66"
+
+tkplot(ig_fl_so, layout = layout.fruchterman.reingold, canvas.height = 900, canvas.width = 1600)
+
+coords3 <- tk_coords("6")/500
+
+svg("graphs/igraph - filtered - coloured - no groups.svg")
+plot(ig_fl_so, 
+     # mark.groups = groups,  # group bubbles
+     layout = coords3, 
+     mark.col = NA,   # group bubble fills
+     rescale = FALSE,
+     xlim = c(0,max(coords3[,1])),
+     ylim = c(0,max(coords3[,2])),
+)
+dev.off()
+
 #** igraph 4 - filtered and numbered -------------------------------------------------------------------------
+
+
+ig_fl_nb <- graph.incidence(mt_fl_so, mode = "all")
+
+row_names4 <- paste0("[", 1:nrow(dfe_filtered), "]")
+
+# gl points
+V(ig_fl_nb)$label[gls3] <- reports_formatted
+V(ig_fl_nb)$color[gls3] <- sphsu_cols("sunshine")
+V(ig_fl_nb)$size[gls3] <- 12
+
+# ref points
+V(ig_fl_nb)$label[refs3] <- row_names4 
+V(ig_fl_nb)$label.color[refs3] <- "black" 
+V(ig_fl_nb)$color[refs3] <- "white"
+V(ig_fl_nb)$size[refs3] <- 4
+
+# all points
+V(ig_fl_nb)$frame.color <- NA
+V(ig_fl_nb)$label.cex <- 0.3
+
+#  edges
+E(ig_fl_nb)$color <- "#DDDDDD66"
+
+coords3
+
+svg("graphs/igraph - filtered - coloured - numbered - no groups.svg")
+plot(ig_fl_nb, 
+     # mark.groups = groups,  # group bubbles
+     layout = coords3, 
+     mark.col = NA,   # group bubble fills
+     rescale = FALSE,
+     xlim = c(0,max(coords3[,1])),
+     ylim = c(0,max(coords3[,2])),
+)
+dev.off()
