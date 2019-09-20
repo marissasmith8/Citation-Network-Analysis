@@ -48,3 +48,25 @@ ggplot(df_colours, aes(x, y, col = factor(number), size = group)) +
 
 export::graph2ppt(last_plot(),"scale.pptx")
 ?scale_size_manual
+
+
+df_country_cols <- tibble(x=1:8, 
+                          y=1:8,
+                          Country = rep(factor(c("WHO", "UK", "Australia", "USA")), 2)
+                            )
+
+col = c(
+  "#ff0000",
+  "#7fff00",
+  "#00ffff",
+  "#7f00ff")
+
+names(col) <- df_country_cols$Country[1:4]
+
+ggplot(df_country_cols, aes(x, y, col = Country)) +
+  geom_line(size = 2) +
+  theme_void() +
+  scale_colour_manual(values = col)
+  # scale_colour_manual(values = (df_country_cols$Country = df_country_cols$col))
+
+export::graph2ppt(last_plot(),"group_legend.pptx")

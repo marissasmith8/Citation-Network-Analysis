@@ -134,7 +134,7 @@ tkplot(ig_allrefs_so, layout = layout.fruchterman.reingold, canvas.height = 450,
 #  take coords from interactive plot
 coords <- tk_coords("3")/500
 
-svg("igraph - all refs - coloured - no groups.svg")
+svg("graphs/igraph - all refs - coloured - no groups.svg")
 plot(ig_allrefs_so, 
     # mark.groups = groups,  # group bubbles
      layout = coords, 
