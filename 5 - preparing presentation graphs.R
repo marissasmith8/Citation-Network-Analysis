@@ -1,3 +1,4 @@
+load("coords.rdata")
 
 # import dataframe b and tidy  ---------------------------------------
 
@@ -33,7 +34,6 @@ colnames(mt_allrefs_so) <- reports_formatted
 # unfiltered - new colours and shapes -------------------------------------
 
 
-ig_allrefs_so <- graph.incidence(mt_allrefs_so, mode = "all")
 
 #  number of rows for refs/guidelines  
 refs <- 1:nrow(dfe_ordered)
@@ -62,16 +62,16 @@ E(ig_allrefs_so)$color <- "#DDDDDD22"
 tkplot(ig_allrefs_so, layout = layout.fruchterman.reingold, canvas.height = 768, canvas.width = 1366)
 
 #  take coords from interactive plot
-coords_ig1 <- tk_coords("4")/400
+co_ig1 <- tk_coords("3")/400
 
 svg("graphs/igraph - all refs - coloured - no groups_pres.svg")
 plot(ig_allrefs_so, 
      # mark.groups = groups,  # group bubbles
-     layout = coords_ig1, 
+     layout = co_ig1, 
      mark.col = NA,   # group bubble fills
      rescale = FALSE,
-     xlim = c(0,max(coords_ig1[,1])),
-     ylim = c(0,max(coords_ig1[,2])),
+     xlim = c(0,max(co_ig1[,1])),
+     ylim = c(0,max(co_ig1[,2])),
 )
 dev.off()
 
@@ -114,21 +114,23 @@ E(ig_fl_so)$color <- "#DDDDDD66"
 
 tkplot(ig_fl_so, layout = layout.fruchterman.reingold, canvas.height = 768, canvas.width = 1366)
 
-coords3 <- tk_coords("5")/450
+co_ig2 <- tk_coords("5")/450
 
 svg("graphs/igraph - filtered - coloured - no groups.svg")
 plot(ig_fl_so, 
      # mark.groups = groups,  # group bubbles
-     layout = coords3, 
+     layout = co_ig2, 
      mark.col = NA,   # group bubble fills
      rescale = FALSE,
-     xlim = c(0,max(coords3[,1])),
-     ylim = c(0,max(coords3[,2])),
+     xlim = c(0,max(co_ig2[,1])),
+     ylim = c(0,max(co_ig2[,2])),
 )
 dev.off()
 
 
 # filtered coloured by conflicts ------------------------------------------
+
+
 
 V(ig_fl_so)$color[refs3] <- 
 
@@ -159,3 +161,9 @@ plot(ig_fl_so,
      ylim = c(0,max(coords3[,2])),
 )
 dev.off()
+
+
+# saving coords for plots -------------------------------------------------
+
+
+save(co_ig1, co_ig2, file = "coords.rdata")

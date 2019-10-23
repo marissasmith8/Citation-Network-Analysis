@@ -1,4 +1,6 @@
 library(tidyverse)
+library(ggplot2)
+library(SPHSUgraphs)
 
 legend_df <- tibble(number = 1:8,
                     y = 1)
