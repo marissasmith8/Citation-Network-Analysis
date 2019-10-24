@@ -83,16 +83,16 @@ paper_fill <- sphsu_cols("leaf",
 
 
 fill_dataframe_pres <- tibble(nrefs = 1:8,
-                              st_n = 0:7,
-                              cn_n = 0:7,
+                              st_n = 1:8,
+                              cn_n = 8:1,
                               nr_fill = pres_fill,
                               st_fill = pres_fill,
                               cn_fill = pres_fill
 )
 
 fill_dataframe_paper <- tibble(nrefs = 1:8,
-                              st_n = 0:7,
-                              cn_n = 0:7,
+                              st_n = 1:8,
+                              cn_n = 8:1,
                               nr_fill = paper_fill,
                               st_fill = paper_fill,
                               cn_fill = paper_fill
@@ -124,23 +124,27 @@ reports_formatted <- gsub("\\.", " ", reports_formatted)  # adding space in one 
 
 dfe_filtered <- dfe_ordered %>% filter(nrefs>2)
 
-peco_tab <- read_xlsx("./data/PECO.xlsx")
+peco_tab <- read_xlsx("./data/PECO (23.10.19).xlsx")
 
-full_dfe <- peco_tab %>% 
+full_dfe <- peco_tab %>%
   select(Reference, stud = `Study design`, conf = `Conflict of Interest`) %>% 
   mutate(conf = str_to_sentence(gsub("^(.*)(conclicts)(.*$)", "\\1conflicts\\3", .$conf)),
          stud = ifelse(stud=="RCT", stud, str_to_sentence(stud)),
          stud = str_replace(stud, "carol", "Carlo"),
-         stud = ifelse(grepl("^Longitudinal.*$", .$stud), "Longitudinal study", stud),
-         stud = ifelse(grepl("^.*sectional.*$", .$stud), "Cross-sectional", stud),
+         stud = ifelse(grepl("^[Ll]ong.*$", .$stud), "Longitudinal study", stud),
+         stud = ifelse(grepl("^[Cc]ross.*$", .$stud), "Cross-sectional", stud),
          stud = ifelse(grepl("^Systematic.*$", .$stud), "Systematic Review", stud),
-         conf = ifelse(grepl("^Pharam.*$", .$conf), "Pharmaceutical", conf)) %>% 
+         conf = ifelse(grepl("^Pharam.*$", .$conf), "Pharmaceutical", conf)
+         ) %>% 
   # pull(stud) %>% unique()  # for testing duplicates
   full_join(dfe_filtered, by = "Reference") %>% 
   mutate(st_n = as.numeric(as.factor(stud)),
          cn_n = as.numeric(as.factor(conf))) %>% 
   full_join(fill_dataframe_pres %>% select(st_n, st_fill), by = "st_n") %>% 
-  full_join(fill_dataframe_pres %>% select(cn_n, cn_fill), by = "cn_n") 
+  full_join(fill_dataframe_pres %>% select(cn_n, cn_fill), by = "cn_n") %>% 
+  filter(!is.na(Reference)) %>% 
+  arrange(desc(nrefs)) %>% 
+  mutate(id = 1:nrow(.))
 
 # Ordered matrix for igraph1 ----------------------------------------------
 

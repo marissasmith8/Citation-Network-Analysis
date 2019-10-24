@@ -1,6 +1,7 @@
 library(tidyverse)
 library(ggplot2)
 library(SPHSUgraphs)
+library(ggpubr)
 
 source("./R/1 - Tidying dataframe to remove duplicates.R")
 
@@ -10,33 +11,57 @@ source("./R/1 - Tidying dataframe to remove duplicates.R")
 legend_df <- tibble(x = factor(1:8),
                     y = 1)  # dummy dataframe for all dots
 
-
-
 # Nrefs legend (for filtered and unfiltered) ------------------------------------------------------------
 
 gr_labels <- dfe_ordered %>% group_by(nrefs) %>% 
   count() %>% 
   mutate(labels = paste0(nrefs, " (", n, ")"))
 
-ggplot(legend_df, aes(x, y, col = factor(number))) + 
+p <- ggplot(legend_df, aes(x, y, col = x)) + 
   geom_point() +
-  scale_color_manual(values = fill_dataframe_pres$fill, labels = gr_labels$labels) +
-  labs(col = "Number of times\ncited across\nguidelines (n):") +
+  scale_color_manual("Number of times\ncited across\nguidelines (n):",
+                     values = fill_dataframe_pres$nr_fill, labels = gr_labels$labels) +
   guides(colour = guide_legend(override.aes = list(size=5))) +
   theme_void()
 
-export::graph2ppt(last_plot(), "Presentation colour legend.pptx")
+as_ggplot(get_legend(p))
+
+export::graph2ppt(last_plot(), "outputs/legend_nrefs_presentation.pptx")
 
 
 
 # study design legend ----------------------------------------------------------------------------------------
 
-st_labels <- dfe_filtered %>% 
+st_labels <- full_dfe %>% 
   select(stud, st_n, st_fill) %>% 
   unique()
 
-ggplot(legend_df, aes(x, y, col = as.numeric(x))) %>% 
-  
+p <- ggplot(legend_df, aes(x, y, col = x)) +
+  geom_point() +
+  scale_colour_manual("Study type:", values = st_labels$st_fill, labels = st_labels$stud) +
+  guides(colour = guide_legend(override.aes = list(size=5))) +
+  theme_void()
+
+as_ggplot(get_legend(p))
+
+export::graph2ppt(last_plot(), "outputs/legend_stud_presentation.pptx")
+
+# Conflicts legend -------------------------------------------------------------------------------------------
+
+cn_labels <- full_dfe %>% 
+  select(conf, cn_n, cn_fill) %>% 
+  unique() %>% 
+  bind_rows(tibble(cn_n = 8, cn_fill = "black"))
+
+p <- ggplot(legend_df, aes(x, y, col = x)) +
+  geom_point() +
+  scale_colour_manual("Conflicts\ndeclared:", values = cn_labels$cn_fill, labels = cn_labels$conf) +
+  guides(colour = guide_legend(override.aes = list(size=5))) +
+  theme_void()
+
+as_ggplot(get_legend(p))
+
+export::graph2ppt(last_plot(), "outputs/legend_conf_presentation.pptx")
 
 
 # paper colour scheme [to be split up] -----------------------------------------------------
@@ -70,24 +95,28 @@ names(col_matrix2) <- 0:8
 
 
 
-ggplot(df_colours, aes(x, y, col = factor(number), size = group)) +
+p <- ggplot(df_colours, aes(x, y, col = factor(number), size = group)) +
   geom_point() +
   scale_colour_manual(name = "References by\nnumber of times\ncited across\nGuidelines:", values = col_matrix2) +
   scale_size_manual(name = "", values = c("Guideline" = 15, "ref" = 5)) +
   theme_void() +
   guides(colour = guide_legend(override.aes = list(size=5)))
 
-export::graph2ppt(last_plot(),"scale.pptx")
+as_ggplot(get_legend(p))
+
+export::graph2ppt(last_plot(),"outputs/scale.pptx")
 
 
 
 
 
 # guideline context colours legend -----------------------------------------------
-gl_cols %>% 
+p <- gl_cols %>% 
   ggplot(aes(Report, fill = context)) + 
   geom_bar() +
   theme_void() +
   scale_fill_manual("Context", values = ccols$fill, labels = ccols$context)
 
-export::graph2ppt(last_plot(), "Context legend.pptx")
+as_ggplot(get_legend(p))
+
+export::graph2ppt(last_plot(), "outputs/legend_context.pptx")

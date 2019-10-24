@@ -1,3 +1,7 @@
+library(officer)
+
+source("./R/1 - Tidying dataframe to remove duplicates.R")
+
 # first output table for PECO checking ---------------------------------------------------------------------------
 
 row_names4 <- paste0("[", 1:nrow(dfe_filtered), "]")
@@ -19,9 +23,18 @@ table_doc <- read_docx()
 
 table_doc <- body_add_table(table_doc, top_refs_table)
 
-print(table_doc, target = "Table of references by times cited.docx")
+print(table_doc, target = "outputs/Table of references by times cited.docx")
 
 
 # tidy dataframe and join with new PECO table ----------------------------------------------------------------
 
+new_numbering <- full_dfe %>% 
+  mutate(ID = paste0("[", id, "]")) %>% 
+  select(ID, Reference, `Study Design` = stud, `Conflicts of Interest` = conf) %>% 
+  left_join(peco_tab[,2:6],  by = "Reference")
 
+new_table_doc <- read_docx()
+
+new_table_doc <- body_add_table(new_table_doc, new_numbering[,c(1,2,5:8, 3, 4)])
+
+print(new_table_doc, target = "outputs/Updated PECO.docx")
