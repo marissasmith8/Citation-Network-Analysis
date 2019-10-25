@@ -1,6 +1,6 @@
+source("./R/1 - Tidying dataframe to remove duplicates.R")
 library(officer)
 
-source("./R/1 - Tidying dataframe to remove duplicates.R")
 
 # first output table for PECO checking ---------------------------------------------------------------------------
 

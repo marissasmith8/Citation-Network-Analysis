@@ -10,7 +10,7 @@ library(SPHSUgraphs)
 # Import and clean dataset -----------------------------------------------------------------------------------
 
 
-import <- read_xlsx("./data/Refs full - corrected.xlsx", sheet = "Clean References ")  # import 'Clean References' sheet
+import <- readxl::read_xlsx("./data/Refs full - corrected.xlsx", sheet = "Clean References ")  # import 'Clean References' sheet
 
 # Relevant rows
 df <- import[1:2888, ]
@@ -125,7 +125,7 @@ reports_formatted <- gsub("\\.", " ", reports_formatted)  # adding space in one 
 dfe_filtered <- dfe_ordered %>% filter(nrefs>2)
 
 # peco_tab <- read_xlsx("./data/PECO (23.10.19).xlsx")
-peco_tab <- read_xlsx("./data/PECO.xlsx")  # updated version
+peco_tab <- readxl::read_xlsx("./data/PECO.xlsx")  # updated version
 
 full_dfe <-  peco_tab %>%
   select(Reference, stud = `Study design`, conf = `Conflict of Interest`) %>% 
