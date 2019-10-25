@@ -75,7 +75,7 @@ V(ig_fl_so)$label.cex <- 0.35
 #  edges
 E(ig_fl_so)$color <- "#DDDDDD66"
 
-# tkplot(ig_fl_so, layout = layout.fruchterman.reingold, canvas.height = 768, canvas.width = 1366)
+tkplot(ig_fl_so, layout = layout.fruchterman.reingold, canvas.height = 768, canvas.width = 1366)
 
 # co_ig2 <- tk_coords("5")/450
 
