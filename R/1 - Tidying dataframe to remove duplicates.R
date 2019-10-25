@@ -124,13 +124,14 @@ reports_formatted <- gsub("\\.", " ", reports_formatted)  # adding space in one 
 
 dfe_filtered <- dfe_ordered %>% filter(nrefs>2)
 
-peco_tab <- read_xlsx("./data/PECO (23.10.19).xlsx")
+# peco_tab <- read_xlsx("./data/PECO (23.10.19).xlsx")
+peco_tab <- read_xlsx("./data/PECO.xlsx")  # updated version
 
-full_dfe <- peco_tab %>%
+full_dfe <-  peco_tab %>%
   select(Reference, stud = `Study design`, conf = `Conflict of Interest`) %>% 
   mutate(conf = str_to_sentence(gsub("^(.*)(conclicts)(.*$)", "\\1conflicts\\3", .$conf)),
          stud = ifelse(stud=="RCT", stud, str_to_sentence(stud)),
-         stud = str_replace(stud, "carol", "Carlo"),
+         stud = str_replace(stud, "carlo", "Carlo"),
          stud = ifelse(grepl("^[Ll]ong.*$", .$stud), "Longitudinal study", stud),
          stud = ifelse(grepl("^[Cc]ross.*$", .$stud), "Cross-sectional", stud),
          stud = ifelse(grepl("^Systematic.*$", .$stud), "Systematic Review", stud),
