@@ -3,7 +3,6 @@ library(tidyverse)
 
 source("./R/1 - Tidying dataframe to remove duplicates.R")
 
-load("./coords.rdata")
 
 # igraph 1: unfiltered ----------------------------------------------
 
@@ -27,7 +26,7 @@ V(ig_allrefs_so)$size[refs] <- 2
 
 #  all dots
 V(ig_allrefs_so)$frame.color <- NA
-V(ig_allrefs_so)$label.cex <- 0.4
+V(ig_allrefs_so)$label.cex <- 0.35
 
 #  edges
 E(ig_allrefs_so)$color <- "#DDDDDD22"
@@ -36,7 +35,7 @@ E(ig_allrefs_so)$color <- "#DDDDDD22"
 tkplot(ig_allrefs_so, layout = layout.fruchterman.reingold, canvas.height = 768, canvas.width = 1366)
 
 #  take coords from interactive plot
-# co_ig1 <- tk_coords("3")/400
+co_ig1 <- tk_coords("1")/450
 
 svg("./graphs/igraph - all refs - coloured - no groups_pres.svg")
 plot(ig_allrefs_so, 
@@ -77,9 +76,9 @@ E(ig_fl_so)$color <- "#DDDDDD66"
 
 tkplot(ig_fl_so, layout = layout.fruchterman.reingold, canvas.height = 768, canvas.width = 1366)
 
-# co_ig2 <- tk_coords("5")/450
+co_ig2 <- tk_coords("3")/450
 
-svg("./graphs/igraph - filtered - coloured - no groups.svg")
+svg("./graphs/igraph - filtered - coloured - no groups.svg", bg = "#003865")
 plot(ig_fl_so, 
      # mark.groups = groups,  # group bubbles
      layout = co_ig2, 
@@ -97,8 +96,8 @@ dev.off()
 
 V(ig_fl_so)$color[refs3] <- full_dfe$cn_fill
 
-  
-  svg("./graphs/igraph - filtered - col_conf.svg")
+
+svg("./graphs/igraph - filtered - col_conf.svg", bg = "#003865")
 plot(ig_fl_so, 
      # mark.groups = groups,  # group bubbles
      layout = co_ig2, 
@@ -114,7 +113,7 @@ dev.off()
 V(ig_fl_so)$color[refs3] <- full_dfe$st_fill
 
   
-  svg("./graphs/igraph - filtered - col_stud.svg")
+svg("./graphs/igraph - filtered - col_stud.svg", bg = "#003865")
 plot(ig_fl_so, 
      # mark.groups = groups,  # group bubbles
      layout = co_ig2, 

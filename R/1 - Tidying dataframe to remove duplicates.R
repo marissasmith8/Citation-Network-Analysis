@@ -69,7 +69,8 @@ pres_fill = c("#00a84c",
               "#9d5524",
               "#ff0000",
               "#7fff00",
-              "#fe9d00")
+              "#fe9d00",
+              "#FFDC36")
 
 paper_fill <- sphsu_cols("leaf",
                          "turquoise",
@@ -79,20 +80,21 @@ paper_fill <- sphsu_cols("leaf",
                          "Thistle", 
                          "Moss",
                          "pumpkin",
+                         "sunshine",
                          names = FALSE)
 
 
-fill_dataframe_pres <- tibble(nrefs = 1:8,
-                              st_n = 1:8,
-                              cn_n = 8:1,
+fill_dataframe_pres <- tibble(nrefs = 1:9,
+                              st_n = 1:9,
+                              cn_n = 1:9,
                               nr_fill = pres_fill,
                               st_fill = pres_fill,
                               cn_fill = pres_fill
 )
 
-fill_dataframe_paper <- tibble(nrefs = 1:8,
-                              st_n = 1:8,
-                              cn_n = 8:1,
+fill_dataframe_paper <- tibble(nrefs = 1:9,
+                              st_n = 1:9,
+                              cn_n = 1:9,
                               nr_fill = paper_fill,
                               st_fill = paper_fill,
                               cn_fill = paper_fill

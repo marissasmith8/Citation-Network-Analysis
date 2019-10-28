@@ -34,11 +34,17 @@ export::graph2ppt(last_plot(), "outputs/legend_nrefs_presentation.pptx")
 
 st_labels <- full_dfe %>% 
   select(stud, st_n, st_fill) %>% 
-  unique()
+  group_by(stud, st_n, st_fill) %>% 
+  count() %>% 
+  unique() %>% arrange(st_n) %>% 
+  mutate(labels = paste0(stud, " (", n, ")"))
+
+legend_df[,1] <- factor(1:9)
+legend_df[9,2] <- 1
 
 p <- ggplot(legend_df, aes(x, y, col = x)) +
   geom_point() +
-  scale_colour_manual("Study type:", values = st_labels$st_fill, labels = st_labels$stud) +
+  scale_colour_manual("Study type:", values = st_labels$st_fill, labels = st_labels$labels) +
   guides(colour = guide_legend(override.aes = list(size=5))) +
   theme_void()
 
@@ -50,12 +56,14 @@ export::graph2ppt(last_plot(), "outputs/legend_stud_presentation.pptx")
 
 cn_labels <- full_dfe %>% 
   select(conf, cn_n, cn_fill) %>% 
-  unique() %>% 
-  bind_rows(tibble(cn_n = 8, cn_fill = "black"))
+  group_by(conf, cn_n, cn_fill) %>%
+  count() %>% 
+  mutate(label = paste0(conf, " (", n, ")")) %>% 
+  unique()
 
-p <- ggplot(legend_df, aes(x, y, col = x)) +
+p <- ggplot(legend_df %>% filter(as.numeric(x)<8), aes(x, y, col = x)) +
   geom_point() +
-  scale_colour_manual("Conflicts\ndeclared:", values = cn_labels$cn_fill, labels = cn_labels$conf) +
+  scale_colour_manual("Conflicts\ndeclared:", values = cn_labels$cn_fill, labels = cn_labels$label) +
   guides(colour = guide_legend(override.aes = list(size=5))) +
   theme_void()
 
