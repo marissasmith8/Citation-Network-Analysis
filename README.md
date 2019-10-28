@@ -1,3 +1,7 @@
+<!-- badges: start -->
+[![DOI](https://zenodo.org/badge/180626317.svg)](https://zenodo.org/badge/latestdoi/180626317)
+<!-- badges: end -->
+
 # Exploring e-cigarette policy recommendations and the role of evidence
 ## A citation network analysis of international public health guidelines
 
