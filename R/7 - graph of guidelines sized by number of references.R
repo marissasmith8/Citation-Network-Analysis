@@ -49,7 +49,27 @@ mt <- diag(nrow = nrow(dref_df), ncol = nrow(dref_df))
 row.names(mt) <- dref_df$Guideline
 colnames(mt) <- dref_df$Guideline
 
-# igraph -----------------------------------------------------------------------------------------------------
+
+# ggplot ------------------------------------------------------------------
+
+cols <- ccols$fill
+names(cols) <- ccols$context
+
+dref_df %>% ggplot(aes(x = context, y = rank, col = context, size = Nrefs)) +
+  geom_point(shape = 16) + 
+  coord_flip() + 
+  theme(legend.position = "none",
+        rect = element_blank(),
+        axis.ticks = element_blank()) +
+  scale_y_continuous(expand = c(0.11, 0), "Rank by number of references", breaks = NULL) +
+  scale_x_discrete("Context", limits = rev(c("UK", "AUS", "USA", "WHO"))) +
+  scale_size_continuous(range = c(1,30)) +
+  scale_color_manual(values = cols) +
+  geom_text(aes(label = label, size = NULL), col = "#003865")
+
+export::graph2ppt(last_plot(), "graphs/size by nrefs.pptx", height = 4, width = 7)
+
+  # igraph -----------------------------------------------------------------------------------------------------
 
 ig <- graph.adjacency(mt) 
 

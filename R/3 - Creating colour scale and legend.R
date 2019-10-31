@@ -36,17 +36,18 @@ st_labels <- full_dfe %>%
   select(stud, st_n, st_fill) %>% 
   group_by(stud, st_n, st_fill) %>% 
   count() %>% 
-  unique() %>% arrange(st_n) %>% 
+  unique() %>% arrange(desc(n)) %>% 
   mutate(labels = paste0(stud, " (", n, ")"))
 
-legend_df[,1] <- factor(1:9)
-legend_df[9,2] <- 1
+
 
 p <- ggplot(legend_df, aes(x, y, col = x)) +
   geom_point() +
-  scale_colour_manual("Study type:", values = st_labels$st_fill, labels = st_labels$labels) +
+  scale_colour_manual("Type of citation:", values = st_labels$st_fill, labels = st_labels$labels) +
   guides(colour = guide_legend(override.aes = list(size=5))) +
-  theme_void()
+  theme_void() +
+  theme(legend.background = element_rect(fill = "#003865"),
+        text = element_text(color = "white"))
 
 as_ggplot(get_legend(p))
 
@@ -58,14 +59,17 @@ cn_labels <- full_dfe %>%
   select(conf, cn_n, cn_fill) %>% 
   group_by(conf, cn_n, cn_fill) %>%
   count() %>% 
+  arrange(desc(n)) %>% 
   mutate(label = paste0(conf, " (", n, ")")) %>% 
   unique()
 
 p <- ggplot(legend_df %>% filter(as.numeric(x)<8), aes(x, y, col = x)) +
   geom_point() +
-  scale_colour_manual("Conflicts\ndeclared:", values = cn_labels$cn_fill, labels = cn_labels$label) +
+  scale_colour_manual("Conflicts of interest:", values = cn_labels$cn_fill, labels = cn_labels$label) +
   guides(colour = guide_legend(override.aes = list(size=5))) +
-  theme_void()
+  theme_void() +
+  theme(legend.background = element_rect(fill = "#003865"),
+        text = element_text(color = "white"))
 
 as_ggplot(get_legend(p))
 

@@ -135,11 +135,16 @@ full_dfe <-  peco_tab %>%
          stud = ifelse(stud=="RCT", stud, str_to_sentence(stud)),
          stud = str_replace(stud, "carlo", "Carlo"),
          stud = ifelse(grepl("^[Ll]ong.*$", .$stud), "Longitudinal study", stud),
+         stud = ifelse(grepl("^[Pp]olicy.*$", .$stud), "Policy document", stud),
          stud = ifelse(grepl("^[Cc]ross.*$", .$stud), "Cross-sectional", stud),
-         stud = ifelse(grepl("^Systematic.*$", .$stud), "Systematic Review", stud),
-         conf = ifelse(grepl("^Pharam.*$", .$conf), "Pharmaceutical", conf)
+         stud = ifelse(grepl("^[Ss]ystematic.*$", .$stud), "Systematic Review", stud),
+         conf = ifelse(grepl("^Pharam.*$", .$conf), "Pharmaceutical", conf),
+         conf = ifelse(grepl("^[Oo]utlier.*$", .$conf), "Tobacco control advocate", conf),
+         conf = ifelse(grepl("^[Nn]o conflicts of intere.*$", .$conf), "None declared", conf),
+         conf = ifelse(grepl("^[Nn]o confl.*stated$", .$conf), "No mention", conf)
+         # conf = ifelse(grepl("^[Nn]o confl*$", .$conf), "None declared", conf)
          ) %>% 
-  # pull(stud) %>% unique()  # for testing duplicates
+  # pull(conf) %>% unique()  # for testing duplicates
   full_join(dfe_filtered, by = "Reference") %>% 
   mutate(st_n = as.numeric(as.factor(stud)),
          cn_n = as.numeric(as.factor(conf))) %>% 
