@@ -69,8 +69,7 @@ pres_fill = c("#00a84c",
               "#9d5524",
               "#ff0000",
               "#7fff00",
-              "#fe9d00",
-              "#FFDC36")
+              "#fe9d00")
 
 paper_fill <- sphsu_cols("leaf",
                          "turquoise",
@@ -80,21 +79,24 @@ paper_fill <- sphsu_cols("leaf",
                          "Thistle", 
                          "Moss",
                          "pumpkin",
-                         "sunshine",
                          names = FALSE)
 
 
-fill_dataframe_pres <- tibble(nrefs = 1:9,
-                              st_n = 1:9,
-                              cn_n = 1:9,
-                              nr_fill = pres_fill,
-                              st_fill = pres_fill,
-                              cn_fill = pres_fill
-)
+fill_dataframe_pres <- 
+  tibble(conf = c("No mention", "None declared", "Pharmaceutical", 
+                  "Both e-cigarrette and pharmaceutical", "E-cigarette", "Tobacco company", 
+                  "Tobacco control advocate", NA),
+         cn_n = c(4, 3, 6, 1, 2, 7, 5, 8),
+         cn_fill = c("#dc9dbe", "#7f00ff", "#ff0000", "#00a84c", "#00ffff", "#7fff00", "#9d5524", "#fe9d00")) %>% 
+  bind_cols(tibble(nrefs = 1:8,
+                   st_n = 1:8,
+                   nr_fill = pres_fill,
+                   st_fill = pres_fill
+  ))
 
-fill_dataframe_paper <- tibble(nrefs = 1:9,
-                              st_n = 1:9,
-                              cn_n = 1:9,
+fill_dataframe_paper <- tibble(nrefs = 1:8,
+                              st_n = 1:8,
+                              cn_n = 1:8,
                               nr_fill = paper_fill,
                               st_fill = paper_fill,
                               cn_fill = paper_fill
@@ -105,12 +107,6 @@ dfe <- dfd %>%
   mutate(nrefs = rowSums(.[2:17])) %>% 
   full_join(fill_dataframe_pres %>% select(nrefs, nr_fill), by = "nrefs") %>%  # fill_dataframe_[pres/paper]
   filter(Reference != "No references given")
-
-
-# IS THIS USED??
-# row_names_dfe <- dfe %>% 
-#   filter(nrefs >= 3) %>% 
-#   pull(Reference)
 
 dfe_ordered <- dfe %>% arrange(nrefs)
 
@@ -146,10 +142,9 @@ full_dfe <-  peco_tab %>%
          ) %>% 
   # pull(conf) %>% unique()  # for testing duplicates
   full_join(dfe_filtered, by = "Reference") %>% 
-  mutate(st_n = as.numeric(as.factor(stud)),
-         cn_n = as.numeric(as.factor(conf))) %>% 
+  mutate(st_n = as.numeric(as.factor(stud))) %>% 
   full_join(fill_dataframe_pres %>% select(st_n, st_fill), by = "st_n") %>% 
-  full_join(fill_dataframe_pres %>% select(cn_n, cn_fill), by = "cn_n") %>% 
+  full_join(fill_dataframe_pres %>% select(conf, cn_n, cn_fill), by = "conf") %>% 
   filter(!is.na(Reference)) %>% 
   arrange(desc(nrefs)) %>% 
   mutate(id = 1:nrow(.))
