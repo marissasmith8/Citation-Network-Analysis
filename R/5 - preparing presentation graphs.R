@@ -76,8 +76,9 @@ E(ig_fl_so)$color <- "#DDDDDD66"
 
 tkplot(ig_fl_so, layout = layout.fruchterman.reingold, canvas.height = 768, canvas.width = 1366)
 
-co_ig2 <- tk_coords("3")/450
+co_ig2 <- tk_coords("1")/450
 
+# svglite::svglite("./graphs/igraph - filtered - coloured - no groups2.svg", bg = "#003865")
 svg("./graphs/igraph - filtered - coloured - no groups.svg", bg = "#003865")
 plot(ig_fl_so, 
      # mark.groups = groups,  # group bubbles
