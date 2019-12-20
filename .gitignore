@@ -8,3 +8,4 @@
 *.emf
 graphs/
 Documents/
+.httr-oauth
