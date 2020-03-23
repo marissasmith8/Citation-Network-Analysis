@@ -1,5 +1,8 @@
 library(dendextend)
 library(tidyverse)
+library(cluster)
+library(purrr)
+
 
 source("./R/1 - Tidying dataframe to remove duplicates.R")
 
@@ -23,3 +26,32 @@ ddg <- as.dendrogram(clust)
 ddg <- color_branches(ddg, k = 6)
 
 plot(ddg)
+
+pm_6 <- mt_byrow %>% 
+  pam(k = 6)
+
+plot(silhouette(pm_6))
+
+pm_all <- map_dbl(2:10, function(k) {
+  model <- pam(x = mt_byrow, k = k)
+  model$silinfo$avg.width
+})
+
+ggplot(tibble(
+  k = 2:10,
+  width = pm_all
+),
+aes(k, width)) + geom_line()
+
+
+eb_all <- map_dbl(1:10, function(k) {
+  kmeans(mt_byrow, centers =  k)$tot.withinss
+})
+
+
+ggplot(tibble(
+  k = 1:10,
+  tot.ss = eb_all
+),
+aes(k, tot.ss)) + geom_line() +
+  scale_x_continuous(breaks = 1:10)

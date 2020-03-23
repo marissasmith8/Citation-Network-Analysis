@@ -1,0 +1,2 @@
+message("rscopus Elsevier API set")
+Sys.setenv('Elsevier_API' = '52d7e732620d031cdead3385013c9ea6')

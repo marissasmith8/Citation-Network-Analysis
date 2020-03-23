@@ -10,10 +10,11 @@ library(SPHSUgraphs)
 # Import and clean dataset -----------------------------------------------------------------------------------
 
 
-import <- readxl::read_xlsx("./data/Refs full - corrected.xlsx", sheet = "Clean References ")  # import 'Clean References' sheet
+import <- readxl::read_xlsx("./data/Refs full - corrected Feb20.xlsx", sheet = "Clean References ")  # import 'Clean References' sheet
+# import <- readxl::read_xlsx("./data/Refs full - corrected.xlsx", sheet = "Clean References ")  # import 'Clean References' sheet
 
 # Relevant rows
-df <- import[1:2888, ]
+df <- import[1:2889, ]
 
 index <- which(is.na(df$Reference))
 
@@ -96,7 +97,11 @@ fill_dataframe_pres <-
 
 fill_dataframe_paper <- tibble(nrefs = 1:8,
                               st_n = 1:8,
-                              cn_n = 1:8,
+                              conf = c("No mention", "None declared", "Pharmaceutical", 
+                                       "Both e-cigarrette and pharmaceutical", "E-cigarette", "Tobacco company", 
+                                       "Tobacco control advocate", NA),
+                              cn_n = c(4, 3, 6, 1, 2, 7, 5, 8),
+                              # cn_n = 1:8,
                               nr_fill = paper_fill,
                               st_fill = paper_fill,
                               cn_fill = paper_fill
@@ -105,7 +110,8 @@ fill_dataframe_paper <- tibble(nrefs = 1:8,
 # Edit here for colour scheme change
 dfe <- dfd %>% 
   mutate(nrefs = rowSums(.[2:17])) %>% 
-  full_join(fill_dataframe_pres %>% select(nrefs, nr_fill), by = "nrefs") %>%  # fill_dataframe_[pres/paper]
+  full_join(fill_dataframe_paper %>% select(nrefs, nr_fill), by = "nrefs") %>%  # fill_dataframe_[pres/paper]
+  # full_join(fill_dataframe_pres %>% select(nrefs, nr_fill), by = "nrefs") %>%  # fill_dataframe_[pres/paper]
   filter(Reference != "No references given")
 
 dfe_ordered <- dfe %>% arrange(nrefs)
@@ -143,8 +149,8 @@ full_dfe <-  peco_tab %>%
   # pull(conf) %>% unique()  # for testing duplicates
   full_join(dfe_filtered, by = "Reference") %>% 
   mutate(st_n = as.numeric(as.factor(stud))) %>% 
-  full_join(fill_dataframe_pres %>% select(st_n, st_fill), by = "st_n") %>% 
-  full_join(fill_dataframe_pres %>% select(conf, cn_n, cn_fill), by = "conf") %>% 
+  full_join(fill_dataframe_paper %>% select(st_n, st_fill), by = "st_n") %>% 
+  full_join(fill_dataframe_paper %>% select(conf, cn_n, cn_fill), by = "conf") %>% 
   filter(!is.na(Reference)) %>% 
   arrange(desc(nrefs)) %>% 
   mutate(id = 1:nrow(.))

@@ -33,7 +33,6 @@ df <- full_df[-index,] %>%
 
 dfb <-
   df %>% 
-    # mutate(orgname = str_replace_all(Reference, "(\\d|[^\\w\\s])", "")) %>% 
     mutate(orgname = str_remove_all(Reference, "\\(.*\\)")) %>%
     mutate(orgname = str_remove_all(orgname, "[:punct:]")) %>%
     mutate(orgname = str_trim(orgname)) %>% 
@@ -294,6 +293,7 @@ for (k in 1:nrow(dois_s2)) {
 write_file(text3,
            path = "Documents/export4.bib")
 
+dois_done <- dois_search %>% full_join(dois, by = "doi") %>% full_join(dois_s2, by = "doi") %>% pull(doi) %>% unique()
 
 
 # google scholar search test # DEFUNCT ----------------------------------------------
@@ -440,3 +440,18 @@ results2 %>%
                        1, 0),
          )
 
+
+# dois from shiny app -----------------------------------------------------
+
+shiny_extr_dois <- sheets_results %>%
+  filter(!(doi %in% dois_done), !is.na(doi))
+  
+  text4 <- ""
+for (k in 1:nrow(shiny_extr_dois)) {
+  text4 <- paste0(text4,
+                  "\n@article{a1,\ntitle = {", shiny_extr_dois$title[k], "},\ndoi = {", shiny_extr_dois$doi[k], "},\nnote = {", shiny_extr_dois$Reference[k], "}\n}"
+  )  
+}
+
+write_file(text4,
+           path = "Documents/export5.bib")

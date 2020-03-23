@@ -1,0 +1,94 @@
+---
+title: "duplicates"
+author: "Andrew Baxter"
+date: "21/02/2020"
+output: word_document
+---
+
+```{r setup, include = FALSE}
+library(googlesheets)
+library(readr)
+library(tidyverse)
+library(knitr)
+load("data/googlesheets_results.rda")
+```
+
+```{r dup1}
+sheets_results %>% select(`Full Reference`, Reference, doi, title, au1, journal) %>% filter(str_detect(Reference, "Barrington-Trimis")) %>% kable()
+
+```
+
+```{r}
+sheets_results %>% select(`Full Reference`, Reference, doi, title, au1, journal) %>% filter(str_detect(Reference, "Bartschat"))%>% kable()
+
+```
+
+```{r}
+sheets_results %>% select(`Full Reference`, Reference, doi, title, au1, journal) %>% filter(str_detect(Reference, "Brandon, TH"))%>% kable()
+```
+
+
+```{r}
+sheets_results %>% select(`Full Reference`, Reference, doi, title, au1, journal) %>% filter(str_detect(Reference, "Camenga.*2014"))%>% kable()
+```
+
+```{r}
+sheets_results %>% select(`Full Reference`, Reference, doi, title, au1, journal) %>% filter(str_detect(Reference, "Cobb, NK"))%>% kable()
+```
+
+```{r}
+sheets_results %>% select(`Full Reference`, Reference, doi, title, au1, journal) %>% filter(str_detect(Reference, "Coleman.*201[45]"))%>% kable()
+```
+
+```{r}
+sheets_results %>% select(`Full Reference`, Reference, doi, title, au1, journal) %>% filter(str_detect(Reference, "Cobb, NK"))%>% kable()
+```
+
+
+```{r}
+sheets_results %>% select(`Full Reference`, Reference, doi, title, au1, journal) %>% filter(str_detect(Reference, "Ford.*201[56]"))%>% kable()
+```
+
+```{r}
+sheets_results %>% select(`Full Reference`, Reference, doi, title, au1, journal) %>% filter(str_detect(Reference, "Ganz.*201[45]"))%>% kable()
+```
+
+```{r}
+sheets_results %>% select(`Full Reference`, Reference, doi, title, au1, journal) %>% filter(str_detect(Reference, "Hajek.*2014"))%>% kable()
+```
+
+```{r}
+sheets_results %>% select(`Full Reference`, Reference, doi, title, au1, journal) %>% filter(str_detect(Reference, "Hartmann-Boyce.*2016"))%>% kable()
+```
+
+```{r}
+sheets_results %>% select(`Full Reference`, Reference, doi, title, au1, journal) %>% filter(str_detect(Reference, "Hecht.*201[45]"))%>% kable()
+```
+
+```{r}
+sheets_results %>% select(`Full Reference`, Reference, doi, title, au1, journal) %>% filter(str_detect(Reference, "Jarvis.*2015"))%>% kable()
+```
+
+```{r}
+sheets_results %>% select(`Full Reference`, Reference, doi, title, au1, journal) %>% filter(str_detect(Reference, "Kalkhoran.*2016"))%>% kable()
+```
+
+```{r}
+sheets_results %>% select(`Full Reference`, Reference, doi, title, au1, journal) %>% filter(str_detect(Reference, "Kornfield.*201[45]"))%>% kable()
+```
+
+```{r}
+sheets_results %>% select(`Full Reference`, Reference, doi, title, au1, journal) %>% filter(str_detect(Reference, "Moyses.*2014"))%>% kable()
+```
+
+```{r}
+sheets_results %>% select(`Full Reference`, Reference, doi, title, au1, journal) %>% filter(str_detect(Reference, "Nunn.*2014"))%>% kable()
+```
+
+```{r}
+sheets_results %>% select(`Full Reference`, Reference, doi, title, au1, journal) %>% filter(str_detect(Reference, "Oncken.*201[34]"))%>% kable()
+```
+
+```{r}
+sheets_results %>% select(`Full Reference`, Reference, doi, title, au1, journal) %>% filter(str_detect(Reference, "Wagener.*201[67]"))%>% kable()
+```

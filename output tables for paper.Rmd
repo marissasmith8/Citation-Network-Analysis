@@ -1,0 +1,16 @@
+---
+title: "output tables"
+author: "Andrew Baxter"
+date: "20/02/2020"
+output:
+  word_document: default
+  html_document:
+    df_print: paged
+---
+# Clusters
+
+```{r cluster_table}
+mod3_layout[[2]] %>% 
+  map2_df(1:12, ~ tibble(Cluster = .y, `Guideline Documents` = str_flatten(.x[[2]], ", "), `Number of references in cluster` = length(.x[[1]])))
+
+```

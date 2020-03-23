@@ -20,13 +20,13 @@ gr_labels <- dfe_ordered %>% group_by(nrefs) %>%
 p <- ggplot(legend_df, aes(x, y, col = x)) + 
   geom_point() +
   scale_color_manual("Number of times\ncited across\nguidelines (n):",
-                     values = fill_dataframe_pres$nr_fill, labels = gr_labels$labels) +
+                     values = fill_dataframe_paper$nr_fill, labels = gr_labels$labels) +
   guides(colour = guide_legend(override.aes = list(size=5))) +
   theme_void()
 
 as_ggplot(get_legend(p))
 
-export::graph2ppt(last_plot(), "outputs/legend_nrefs_presentation.pptx")
+export::graph2ppt(last_plot(), "outputs/legend_nrefs_paper.pptx")
 
 
 
@@ -51,7 +51,7 @@ p <- ggplot(legend_df, aes(x, y, col = x)) +
 
 as_ggplot(get_legend(p))
 
-export::graph2ppt(last_plot(), "outputs/legend_stud_presentation.pptx")
+export::graph2ppt(last_plot(), "outputs/legend_stud_paper.pptx")
 
 # Conflicts legend -------------------------------------------------------------------------------------------
 
@@ -73,12 +73,12 @@ p <- ggplot(legend_df %>% filter(as.numeric(x)<8), aes(x, y, col = x)) +
 
 as_ggplot(get_legend(p))
 
-export::graph2ppt(last_plot(), "outputs/legend_conf_presentation.pptx")
+export::graph2ppt(last_plot(), "outputs/legend_conf_paper.pptx")
 
 
 # paper colour scheme [to be split up] -----------------------------------------------------
 
-sphsu_palettes$matrix <- sphsu_cols("leaf", "turquoise","thistle", "burgundy",  "university blue", "cobalt", "rust", "pumpkin")
+# paper_fill <- sphsu_cols("leaf", "turquoise","thistle", "burgundy",  "university blue", "cobalt", "rust", "pumpkin", names = FALSE)
 
 ggplot(legend_df, aes(x = factor(number), fill = factor(number))) + 
   geom_bar() +
