@@ -1,0 +1,27 @@
+---
+title: "Double checking"
+author: "Andrew Baxter"
+date: "27/03/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(googlesheets)
+library(tidyverse)
+library(knitr)
+
+sheet <- gs_title("new_conflicts")
+
+conflicts <- gs_read(sheet, ws = "conflicts_1203")
+```
+
+```{r table, echo = FALSE}
+conflicts %>% 
+  filter(`no mention` == 1) %>% 
+  sample_n(20) %>% 
+  mutate(doi = paste0("<a href='https://dx.doi.org/", doi, "' target='_blank'>", doi, "</a>"),
+         PDF = paste0("<a href='", dir, "' target='_blank'>PDF</a>")) %>% 
+  select(Reference, doi, PDF, title) %>% 
+  mutate(done = '<input type="checkbox">') %>% 
+  kable()
+```
