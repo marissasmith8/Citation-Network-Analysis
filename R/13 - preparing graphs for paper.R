@@ -65,15 +65,16 @@ co_ig1 <- tk_coords("1")/450
 # 
 # 
 # svg("./graphs/igraph - all refs - coloured - no groups_pres.svg")
-# plot(ig_allrefs_so, 
-#      # mark.groups = groups,  # group bubbles
-#      layout = co_ig1, 
-#      mark.col = NA,   # group bubble fills
-#      rescale = FALSE,
-#      xlim = c(0,max(co_ig1[,1])),
-#      ylim = c(0,max(co_ig1[,2])),
-# )
-# dev.off()
+svglite::svglite("./graphs/igraph - all refs - coloured - no groups - paper.svg", width = 300/25, height = 150/25)
+plot(ig_allrefs_so,
+     # mark.groups = groups,  # group bubbles
+     layout = co_ig1,
+     mark.col = NA,   # group bubble fills
+     rescale = FALSE,
+     xlim = c(0,max(co_ig1[,1])),
+     ylim = c(0,max(co_ig1[,2])),
+)
+dev.off()
 
 # igraph 2: filtered and coloured by nrefs -------------------------------------------------------------------------
 

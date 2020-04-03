@@ -65,9 +65,9 @@ dref_df %>% ggplot(aes(x = context, y = rank, col = context, size = Nrefs)) +
   scale_x_discrete("Context", limits = rev(c("UK", "AUS", "USA", "WHO"))) +
   scale_size_continuous(range = c(1,30)) +
   scale_color_manual(values = cols) +
-  geom_text(aes(label = label, size = NULL), col = "#003865")
+  geom_text(aes(label = label, size = NULL), col = "#000000")
 
-export::graph2ppt(last_plot(), "graphs/size by nrefs.pptx", height = 4, width = 7)
+export::graph2ppt(last_plot(), "graphs/size by nrefs_paper.pptx", height = 4, width = 7)
 
   # igraph -----------------------------------------------------------------------------------------------------
 
