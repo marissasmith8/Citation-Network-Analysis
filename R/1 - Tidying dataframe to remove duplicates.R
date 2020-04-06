@@ -72,15 +72,25 @@ pres_fill = c("#00a84c",
               "#7fff00",
               "#fe9d00")
 
-paper_fill <- sphsu_cols("leaf",
-                         "turquoise",
-                         "Rose",
-                         "university blue",
-                         "Rust",
-                         "Thistle", 
-                         "Moss",
-                         "pumpkin",
-                         names = FALSE)
+# paper_fill <- sphsu_cols("leaf",
+#                          "turquoise",
+#                          "Rose",
+#                          "university blue",
+#                          "Rust",
+#                          "Thistle", 
+#                          "Moss",
+#                          "pumpkin",
+#                          names = FALSE)
+
+paper_fill <- c("#00843D",
+                "#00B5D1", 
+                "#B06C96",
+                "#003865", 
+                "#BE4D00",
+                "#951272", 
+                "#11DD11",
+                "#FFB948",
+                "#EE11EE")
 
 
 fill_dataframe_pres <- 
@@ -95,12 +105,12 @@ fill_dataframe_pres <-
                    st_fill = pres_fill
   ))
 
-fill_dataframe_paper <- tibble(nrefs = 1:8,
-                              st_n = 1:8,
+fill_dataframe_paper <- tibble(nrefs = 1:9,
+                              st_n = 1:9,
                               conf = c("No mention", "None declared", "Pharmaceutical", 
                                        "Both e-cigarrette and pharmaceutical", "E-cigarette", "Tobacco company", 
-                                       "Tobacco control advocate", NA),
-                              cn_n = c(4, 3, 6, 1, 2, 7, 5, 8),
+                                       "Tobacco control advocate", NA, NA),
+                              cn_n = c(4, 3, 6, 1, 2, 7, 5, 8, 9),
                               # cn_n = 1:8,
                               nr_fill = paper_fill,
                               st_fill = paper_fill,

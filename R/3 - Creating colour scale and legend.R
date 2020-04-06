@@ -24,7 +24,9 @@ p <- ggplot(legend_df, aes(x, y, col = x)) +
   guides(colour = guide_legend(override.aes = list(size=5))) +
   theme_void()
 
+# svglite::svglite("outputs/legent_nrefs_paper.svg")
 as_ggplot(get_legend(p))
+# dev.off()
 
 export::graph2ppt(last_plot(), "outputs/legend_nrefs_paper.pptx")
 
@@ -45,9 +47,9 @@ p <- ggplot(legend_df, aes(x, y, col = x)) +
   geom_point() +
   scale_colour_manual("Type of citation:", values = st_labels$st_fill, labels = st_labels$labels) +
   guides(colour = guide_legend(override.aes = list(size=5))) +
-  theme_void() +
-  theme(legend.background = element_rect(fill = "#003865"),
-        text = element_text(color = "white"))
+  theme_void() # +
+  # theme(legend.background = element_rect(fill = "#003865"),
+        # text = element_text(color = "white"))
 
 as_ggplot(get_legend(p))
 
@@ -67,9 +69,9 @@ p <- ggplot(legend_df %>% filter(as.numeric(x)<8), aes(x, y, col = x)) +
   geom_point() +
   scale_colour_manual("Conflicts of interest:", values = cn_labels$cn_fill, labels = cn_labels$label) +
   guides(colour = guide_legend(override.aes = list(size=5))) +
-  theme_void() +
-  theme(legend.background = element_rect(fill = "#003865"),
-        text = element_text(color = "white"))
+  theme_void()# +
+  # theme(legend.background = element_rect(fill = "#003865"),
+  #       text = element_text(color = "white"))
 
 as_ggplot(get_legend(p))
 
