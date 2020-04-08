@@ -96,4 +96,6 @@ print.biSBM <- function(x) {
   cat("Number of groups for node type 1:", attr(x, "a_grps"))
   cat("\nNumber of groups for node type 2:", attr(x, "b_grps"))
   cat("\nBest score:", x$score)
+  cat("\n", deparse(substitute(x)), "$groups:\n", sep = "")
+  cat(x$groups[1:50], "...")
 }

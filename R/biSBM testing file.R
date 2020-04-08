@@ -1,6 +1,9 @@
 library(tidyverse)
 library(plotly)
 library(igraph)
+library(ggmosaic)
+library(SPHSUgraphs)
+library(patchwork)
 source("./R/1 - Tidying dataframe to remove duplicates.R")
 source("R/biSBMR/biSBMWin.R")
 
@@ -189,23 +192,127 @@ points_repeat <- merge(ka, kb) %>%
   mutate(group_model = map2(x, y, ~biSBM(adj2, nodeType2, .x, .y, iter = 10))) %>% 
   mutate(score = map_dbl(group_model, ~ pluck(.x$score[1])))
 
+# save(points_repeat, file = "data/biSBM_points.rda")
+
+# starting from fresh session ---------------------------------------------
+
+load("data/biSBM_points.rda")
 
 points2 <- points_repeat$score %>% 
   matrix(nrow = 8, byrow = TRUE)
   
 
 plot_ly(x = 1:8, y = 1:8, z = points2) %>% add_surface()
-api_create(last_plot(), "max_biSBM_score_filtered_10iter")
+# api_create(last_plot(), "max_biSBM_score_filtered_10iter")
 # Identified three points for testing
 
-test_points <- tibble(x = c(4, 5, 5, 6, 7),
-                      y = c(4, 3, 6, 5, 3))
+test_points <- tibble(x = c(1, 4, 5, 5, 5, 8),
+                      y = c(1, 4, 4, 5, 6, 8))
 
-ll_input <- test_points %>% 
+test_points %>% 
   left_join(points_repeat, by = c("x", "y")) %>% 
-  mutate(deg_freedom = x*y-1) %>% 
-  arrange(deg_freedom)
+  mutate(deg_freedom = x+y-1) %>% 
+  arrange(deg_freedom) %>% 
+  mutate(lr = -2*(lag(score, default = score[1]) - score),
+         diffdeg = deg_freedom - lag(deg_freedom, default = 0),
+         p = pchisq(lr, diffdeg, lower.tail = FALSE)) %>% 
+  ggplot(aes(deg_freedom, score)) +
+  geom_line()
 
--2*(ll_input$score[1] - ll_input$score[2])
+merge(1:8,1:8) %>% 
+  left_join(points_repeat, by = c("x", "y")) %>% 
+  mutate(deg_freedom = x+y-1) %>% 
+  group_by(deg_freedom) %>%
+  summarise(score = max(score)) %>%
+  left_join(points_repeat, by = c("score")) %>% 
+  mutate(lr = -2*(lag(score, default = score[1]) - score),
+         diffdeg = deg_freedom - lag(deg_freedom, default = 0),
+         p = pchisq(lr, diffdeg, lower.tail = FALSE)) %>% View()
+  ggplot(aes(deg_freedom, score)) +
+  geom_line()
 
-# save(points_repeat, file = "data/biSBM_points.rda")
+
+
+
+# taking out models we want to compare ------------------------------------
+
+  key_points <- tibble(x = c(4, 5, 5, 5),
+                       y = c(4, 4, 5, 6))
+  
+groupings <- points_repeat %>% 
+  semi_join(key_points, by = c("x", "y")) %>% 
+  mutate(model = map(group_model, ~ pluck(.x$groups))) %>% 
+  select(x, y, model) %>% 
+  unite("xy", x, y, sep = ":")
+
+p1 <- dfe_n2 %>% 
+  select(Reference) %>% 
+  cbind(groupings$model[[1]][1:304]) %>% 
+  cbind(groupings$model[[2]][1:304]) %>% 
+  cbind(groupings$model[[3]][1:304]) %>% 
+  cbind(groupings$model[[4]][1:304]) %>% 
+  `names<-`(c("Reference", groupings$xy)) %>% 
+  as_tibble() %>% 
+  arrange(`4:4`, `5:4`, `5:5`, `5:6`) %>% 
+  mutate_at(2:5, ~ as.numeric(factor(as.character(.x), levels = unique(.x)))) %>% 
+  mutate(n = nrow(.):1,
+           Reference = reorder(Reference, n)) %>% 
+  pivot_longer(2:5, names_to = "n_groups", values_to = "group") %>% 
+  mutate(n_groups = factor(n_groups)) %>% 
+  ggplot(aes(n_groups, Reference, fill = factor(group))) +
+  geom_tile() +
+  scale_fill_sphsu() +
+  theme_sphsu_light()
+
+
+p2 <- dfe_n2 %>% 
+  select(WHO.2014:APHA.2014) %>% 
+  colnames() %>% 
+  tibble() %>% 
+  dplyr::transmute(GLdoc = str_replace(., "\\.", " ")) %>% 
+  cbind(groupings$model[[1]][305:320]) %>% 
+  cbind(groupings$model[[2]][305:320]) %>% 
+  cbind(groupings$model[[3]][305:320]) %>% 
+  cbind(groupings$model[[4]][305:320]) %>% 
+  `names<-`(c("GLdoc", groupings$xy)) %>% 
+  as_tibble() %>% 
+  arrange(`4:4`, `5:4`, `5:5`, `5:6`) %>% 
+  mutate_at(2:5, ~ LETTERS[as.numeric(factor(as.character(.x), levels = unique(.x)))]) %>% 
+  mutate(n = nrow(.):1,
+         GLdoc = reorder(GLdoc, n)) %>% 
+  pivot_longer(2:5, names_to = "n_groups", values_to = "group") %>% 
+  mutate(n_groups = factor(n_groups)) %>% 
+  ggplot(aes(n_groups, GLdoc, fill = factor(group))) +
+  geom_tile() +
+  scale_fill_sphsu() +
+  theme_sphsu_light()
+
+
+p1+p2
+
+# output tables ------------------------------------------
+
+refs_grp <- dfe_n2 %>% 
+  select(Reference) %>% 
+  cbind(groupings$model[[1]][1:304]) %>% 
+  cbind(groupings$model[[2]][1:304]) %>% 
+  cbind(groupings$model[[3]][1:304]) %>% 
+  cbind(groupings$model[[4]][1:304]) %>% 
+  `names<-`(c("Reference", groupings$xy)) %>% 
+  as_tibble() %>% 
+  arrange(`4:4`, `5:4`, `5:5`, `5:6`) 
+ 
+gls_grp <- dfe_n2 %>% 
+  select(WHO.2014:APHA.2014) %>% 
+  colnames() %>% 
+  tibble() %>% 
+  dplyr::transmute(GLdoc = str_replace(., "\\.", " ")) %>% 
+  cbind(groupings$model[[1]][305:320]) %>% 
+  cbind(groupings$model[[2]][305:320]) %>% 
+  cbind(groupings$model[[3]][305:320]) %>% 
+  cbind(groupings$model[[4]][305:320]) %>% 
+  `names<-`(c("GLdoc", groupings$xy)) %>% 
+  as_tibble() %>% 
+  arrange(`4:4`, `5:4`, `5:5`, `5:6`)
+
+# save(refs_grp, gls_grp, file = "data/biSBMgroups.rda")

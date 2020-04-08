@@ -1,0 +1,113 @@
+---
+title: "Grouping references"
+author: "Andrew Baxter"
+date: "07/04/2020"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, include = TRUE, message = FALSE)
+load("data/biSBMgroups.rda")
+library(tidyverse)
+library(plyr)
+library(knitr)
+library(data.table)
+i <- 2
+```
+
+
+# Model `r i-1`: `r colnames(refs_grp[,i])`
+
+## Guideline docs grouping
+```{r include = TRUE}
+gls_grp %>% 
+  select(GLdoc, Group = i) %>% 
+  arrange(Group) %>% 
+  kable()
+```
+
+## Reference docs grouping
+```{r}
+refs_grp %>% 
+  select(Reference, Group = i) %>% 
+  arrange(Group) %>% 
+  kable()
+
+```
+
+```{r echo = FALSE}
+i <- i+1
+```
+
+
+# Model `r i-1`: `r colnames(refs_grp[,i])`
+
+## Guideline docs grouping
+```{r}
+gls_grp %>% 
+  select(GLdoc, Group = i) %>% 
+  arrange(Group) %>% 
+  kable()
+```
+
+## Reference docs grouping
+```{r}
+refs_grp %>% 
+  select(Reference, Group = i) %>% 
+  arrange(Group) %>% 
+  kable()
+
+```
+
+```{r echo = FALSE}
+i <- i+1
+```
+
+
+# Model `r i-1`: `r colnames(refs_grp[,i])`
+
+## Guideline docs grouping
+```{r}
+gls_grp %>% 
+  select(GLdoc, Group = i) %>% 
+  arrange(Group) %>% 
+  kable()
+```
+
+## Reference docs grouping
+```{r}
+refs_grp %>% 
+  select(Reference, Group = i) %>% 
+  arrange(Group) %>% 
+  kable()
+
+```
+
+```{r echo = FALSE}
+i <- i+1
+```
+
+
+# Model `r i-1`: `r colnames(refs_grp[,i])`
+
+## Guideline docs grouping
+```{r}
+gls_grp %>% 
+  select(GLdoc, Group = i) %>% 
+  arrange(Group) %>% 
+  kable()
+```
+
+## Reference docs grouping
+```{r}
+refs_grp %>% 
+  select(Reference, Group = i) %>% 
+  arrange(Group) %>% 
+  kable()
+
+```
+
+```{r echo = FALSE}
+i <- i+1
+```
+
