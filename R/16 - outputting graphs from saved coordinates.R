@@ -4,7 +4,7 @@ library(ggraph)
 library(svglite)
 
 load("./data/coords.rdata")
-source("./R/1 - Tidying dataframe to remove duplicates.R")
+d
 
 #  In this file, the preformed layouts are loaded
 #  Each graph's attributes can be edited using the `V` and `E` functions

@@ -9,7 +9,6 @@ output: html_document
 library(googlesheets)
 library(tidyverse)
 library(knitr)
-library(janitor)
 
 sheet <- gs_title("new_conflicts")
 
@@ -43,3 +42,4 @@ conflicts %>%
   addmargins() #%>% 
   # export::table2doc('outputs/conflicts_by_gl.docx', digits = 0, add.rownames = TRUE)
 ```
+
