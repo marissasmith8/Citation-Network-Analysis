@@ -129,6 +129,43 @@ sheets_results <- gs_title("Ongoing results screening") %>%  gs_read(ws = "compl
 
 sheets_results %>% group_by(type) %>% tally() %>% write.csv("outputs/results.csv")
 
+tots <- sheets_results %>%
+  group_by(type) %>% 
+  tally() %>% 
+  select(type, `Total across all contexts` = n)
+
+sheets_results %>% 
+  select(Reference,type) %>% 
+  left_join(dfe,by="Reference") %>% 
+  select(-nrefs, -nr_fill, -Reference) %>% 
+  pivot_longer(-type, names_to = "gl_doc", values_to = "cited") %>% 
+  group_by(gl_doc,type) %>% 
+  summarise(ncited=sum(cited,na.rm = TRUE)) %>% 
+  pivot_wider(names_from = gl_doc, values_from = ncited) %>% 
+  adorn_totals(where=c("row","col"))
+ 
+
+  sheets_results %>% 
+    select(Reference,type) %>% 
+    left_join(dfe,by="Reference") %>% 
+    select(-nrefs, -nr_fill) %>% 
+    pivot_longer(-c(type, Reference), names_to = "gl_doc", values_to = "cited") %>%
+    left_join(gl_cols %>% 
+                mutate(gl_doc =str_replace_all(Report,"\\s","\\.")) %>% 
+                select(gl_doc,context  ),by="gl_doc") %>% 
+    filter(cited==1) %>% 
+    select(-gl_doc) %>% 
+    unique() %>% 
+    select (-Reference) %>% 
+    group_by(context,type) %>% 
+    summarise(ncited=sum(cited,na.rm = TRUE)) %>% 
+    pivot_wider(names_from = context, values_from = ncited, values_fill = list(ncited=0)) %>% 
+    # left_join(tots, by = "type") %>% 
+    adorn_totals(where="row") %>% 
+    table2doc(digits=0,"outputs/citation context groups.docx")
+
+
+ 
 
 # defunct - trial rscopus full texts --------------------------------------
 

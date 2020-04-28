@@ -134,4 +134,4 @@ dev.off()
 # saving coords for plots -------------------------------------------------
 
 
-save(co_ig1, co_ig2, file = "./data/coords.rdata")
+save(ig_allrefs_so, ig_fl_so, co_ig1, co_ig2, file = "./data/coords.rdata")

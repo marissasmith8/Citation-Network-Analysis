@@ -10,5 +10,9 @@ graphs/
 Documents/
 .httr-oauth
 .Rprofile
+<<<<<<< HEAD
 biSBM groups ouput.Rmd
 biSBM-groups-ouput.docx
+=======
+biSBMWin_R.dll
+>>>>>>> 4dad213d892bfc1bab4884a929c09de33412d9df
