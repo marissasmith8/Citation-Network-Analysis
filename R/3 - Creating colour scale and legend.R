@@ -28,7 +28,7 @@ p <- ggplot(legend_df, aes(x, y, col = x)) +
 as_ggplot(get_legend(p))
 # dev.off()
 
-export::graph2ppt(last_plot(), "outputs/legend_nrefs_paper.pptx")
+  export::graph2ppt(last_plot(), "outputs/legend_nrefs_paper.pptx", append = TRUE)
 
 
 

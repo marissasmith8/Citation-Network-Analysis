@@ -9,6 +9,7 @@ output: html_document
 library(googlesheets)
 library(tidyverse)
 library(knitr)
+library(janitor)
 
 sheet <- gs_title("new_conflicts")
 
@@ -24,4 +25,21 @@ conflicts %>%
   select(Reference, doi, PDF, title) %>% 
   mutate(done = '<input type="checkbox">') %>% 
   kable()
+```
+
+```{r contingency, eval = FALSE}
+source("./R/1 - Tidying dataframe to remove duplicates.R")
+conflicts %>% 
+  left_join(dfe, by = "Reference") %>% 
+  # clean_names() %>% 
+  select(-(doi:conflicts),-(other1:year),-(nrefs.y:nr_fill)) %>% 
+  pivot_longer(WHO.2014:APHA.2014, names_to = "gldoc", values_to = "cited") %>% 
+  filter(cited == 1) %>%
+  select(-Reference, -cited) %>% 
+  pivot_longer(-gldoc, names_to = "Type of conflict", values_to = "val") %>% 
+  filter(val == 1) %>%
+  select(gldoc,`Type of conflict`) %>%
+  table() %>% 
+  addmargins() %>% 
+  export::table2doc('outputs/conflicts_by_gl.docx', digits = 0, add.rownames = TRUE)
 ```

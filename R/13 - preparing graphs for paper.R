@@ -17,7 +17,7 @@ gls <- (nrow(dfe_ordered)+1):length(V(ig_allrefs_so))
 V(ig_allrefs_so)$label[gls] <- reports_formatted
 V(ig_allrefs_so)$color[gls] <- gl_cols$fill
 V(ig_allrefs_so)$shape[gls] <- "square"
-V(ig_allrefs_so)$size[gls] <- 10
+V(ig_allrefs_so)$size[gls] <- 11
 
 #  ref dots
 V(ig_allrefs_so)$label[refs] <- NA
@@ -27,7 +27,7 @@ V(ig_allrefs_so)$size[refs] <- 2
 
 #  all dots
 V(ig_allrefs_so)$frame.color <- NA
-V(ig_allrefs_so)$label.cex <- 0.35
+V(ig_allrefs_so)$label.cex <- 0.5
 
 #  edges
 E(ig_allrefs_so)$color <- "#97979766"
@@ -36,7 +36,7 @@ E(ig_allrefs_so)$color <- "#97979766"
 tkplot(ig_allrefs_so, layout = layout.fruchterman.reingold, canvas.height = 768, canvas.width = 1366)
 
 #  take coords from interactive plot
-co_ig1 <- tk_coords("1")/450
+co_ig1 <- tk_coords("1")/500
 
 
 svglite::svglite("./graphs/igraph - all refs - coloured - no groups - paper.svg", width = 300/25, height = 150/25)
@@ -72,14 +72,14 @@ V(ig_fl_so)$size[refs3] <- 4
 
 # all points
 V(ig_fl_so)$frame.color <- NA
-V(ig_fl_so)$label.cex <- 0.4
+V(ig_fl_so)$label.cex <- 0.5
 
 #  edges
 E(ig_fl_so)$color <- "#97979766"
 
 tkplot(ig_fl_so, layout = layout.fruchterman.reingold, canvas.height = 768, canvas.width = 1366)
 
-co_ig2 <- tk_coords("2")/450
+co_ig2 <- tk_coords("2")/500
 
 svglite::svglite("./graphs/igraph - filtered - coloured - paper.svg", width = 300/25, height = 150/25)
 # svg("./graphs/igraph - filtered - coloured - no groups.svg", bg = "#003865")
