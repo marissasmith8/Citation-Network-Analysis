@@ -40,6 +40,6 @@ conflicts %>%
   filter(val == 1) %>%
   select(gldoc,`Type of conflict`) %>%
   table() %>% 
-  addmargins() %>% 
-  export::table2doc('outputs/conflicts_by_gl.docx', digits = 0, add.rownames = TRUE)
+  addmargins() #%>% 
+  # export::table2doc('outputs/conflicts_by_gl.docx', digits = 0, add.rownames = TRUE)
 ```
