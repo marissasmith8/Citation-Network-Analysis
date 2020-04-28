@@ -17,7 +17,7 @@ gls <- (nrow(dfe_ordered)+1):length(V(ig_allrefs_so))
 V(ig_allrefs_so)$label[gls] <- reports_formatted
 V(ig_allrefs_so)$color[gls] <- gl_cols$fill
 V(ig_allrefs_so)$shape[gls] <- "square"
-V(ig_allrefs_so)$size[gls] <- 12
+V(ig_allrefs_so)$size[gls] <- 11
 
 #  ref dots
 V(ig_allrefs_so)$label[refs] <- NA
@@ -27,44 +27,18 @@ V(ig_allrefs_so)$size[refs] <- 2
 
 #  all dots
 V(ig_allrefs_so)$frame.color <- NA
-V(ig_allrefs_so)$label.cex <- 0.35
+V(ig_allrefs_so)$label.cex <- 0.5
 
 #  edges
-E(ig_allrefs_so)$color <- "#DDDDDD22"
+E(ig_allrefs_so)$color <- "#97979766"
 
 #  interactive graph to get layout
 tkplot(ig_allrefs_so, layout = layout.fruchterman.reingold, canvas.height = 768, canvas.width = 1366)
 
 #  take coords from interactive plot
-co_ig1 <- tk_coords("1")/450
+co_ig1 <- tk_coords("1")/500
 
 
-# layout <- create_layout(ig_allrefs_so, layout = "kk")
-# 
-# lo2 <- layout %>% 
-#   left_join(dfe_filtered %>% 
-#               select(Reference, nrefs, nr_fill) %>% 
-#               mutate(nrefs = as.character(nrefs)) %>% 
-#               bind_rows(gl_cols %>% transmute(Reference = Report, nrefs = as.character(context), nr_fill = fill)),
-#             by = c(name = "Reference", color = "nr_fill")) %>%
-#   mutate(x = co_ig1[,1], y = co_ig1[,2]) %>% 
-#   `attr<-`("graph", attr(layout, "graph")) %>% 
-#   `attr<-`("class", attr(layout, "class")) %>% 
-#   `attr<-`("circular", attr(layout, "circular"))
-# 
-# ggraph(lo2) +
-#   geom_edge_link(colour = "grey") + 
-#   geom_node_point(aes(color = color, fill = color)) +
-#   geom_node_label(aes(fill = color,label = label), label.size = 0) +
-#   theme(rect = element_blank()) +
-#   scale_fill_identity(aesthetics = c("fill", "colour")) +
-#   theme(legend.position = "right")
-# 
-# ggsave("graphs/igraph - all refs - coloured - paper.svg", units = "mm", width= 300, height = 150)
-
-# 
-# 
-# svg("./graphs/igraph - all refs - coloured - no groups_pres.svg")
 svglite::svglite("./graphs/igraph - all refs - coloured - no groups - paper.svg", width = 300/25, height = 150/25)
 plot(ig_allrefs_so,
      # mark.groups = groups,  # group bubbles
@@ -87,7 +61,7 @@ gls3 <- (nrow(full_dfe)+1):length(V(ig_fl_so))
 V(ig_fl_so)$label[gls3] <- reports_formatted
 V(ig_fl_so)$color[gls3] <- gl_cols$fill
 V(ig_fl_so)$shape[gls3] <- "square"
-V(ig_fl_so)$size[gls3] <- 12
+V(ig_fl_so)$size[gls3] <- 11
 
 # ref points
 V(ig_fl_so)$label[refs3] <- NA 
@@ -95,16 +69,17 @@ V(ig_fl_so)$color[refs3] <- full_dfe$nr_fill
 V(ig_fl_so)$shape[refs3] <- "circle"
 V(ig_fl_so)$size[refs3] <- 4
 
+
 # all points
 V(ig_fl_so)$frame.color <- NA
 V(ig_fl_so)$label.cex <- 0.5
 
 #  edges
-E(ig_fl_so)$color <- "#DDDDDD66"
+E(ig_fl_so)$color <- "#97979766"
 
 tkplot(ig_fl_so, layout = layout.fruchterman.reingold, canvas.height = 768, canvas.width = 1366)
 
-co_ig2 <- tk_coords("2")/450
+co_ig2 <- tk_coords("2")/500
 
 svglite::svglite("./graphs/igraph - filtered - coloured - paper.svg", width = 300/25, height = 150/25)
 # svg("./graphs/igraph - filtered - coloured - no groups.svg", bg = "#003865")

@@ -82,6 +82,10 @@ pres_fill = c("#00a84c",
 #                          "pumpkin",
 #                          names = FALSE)
 
+cont_fill <- scales::brewer_pal(palette = 'Spectral')(8) %>% 
+  rev() %>% 
+  c(.,'#blank')
+
 paper_fill <- c("#00843D",
                 "#00B5D1", 
                 "#B06C96",
@@ -112,7 +116,7 @@ fill_dataframe_paper <- tibble(nrefs = 1:9,
                                        "Tobacco control advocate", NA, NA),
                               cn_n = c(4, 3, 6, 1, 2, 7, 5, 8, 9),
                               # cn_n = 1:8,
-                              nr_fill = paper_fill,
+                              nr_fill = cont_fill,
                               st_fill = paper_fill,
                               cn_fill = paper_fill
 )
