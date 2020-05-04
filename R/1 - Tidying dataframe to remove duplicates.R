@@ -156,9 +156,9 @@ full_dfe <-  peco_tab %>%
          stud = ifelse(grepl("^[Ss]ystematic.*$", .$stud), "Systematic Review", stud),
          conf = ifelse(grepl("^Pharam.*$", .$conf), "Pharmaceutical", conf),
          conf = ifelse(grepl("^[Oo]utlier.*$", .$conf), "Tobacco control advocate", conf),
-         conf = ifelse(grepl("^[Nn]o conflicts of intere.*$", .$conf), "None declared", conf),
+         conf = ifelse(grepl("^[Nn]o conflicts of intere.*$", .$conf), "Declared none", conf),
          conf = ifelse(grepl("^[Nn]o confl.*stated$", .$conf), "No mention", conf)
-         # conf = ifelse(grepl("^[Nn]o confl*$", .$conf), "None declared", conf)
+         # conf = ifelse(grepl("^[Nn]o confl*$", .$conf), "Declared none", conf)
          ) %>% 
   # pull(conf) %>% unique()  # for testing duplicates
   full_join(dfe_filtered, by = "Reference") %>% 
