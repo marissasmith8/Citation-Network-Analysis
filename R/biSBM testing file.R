@@ -22,7 +22,7 @@ adj <- get.adjacency(p, sparse = FALSE)
 t1 <- biSBM(adj, nodeType = c(rep(1, nrow(dfe)), rep(2, ncol(matrixe))), ka = 1, kb = 2)
 
 
-# t2 <- biSBM(adj, nodeType = c(rep(1, nrow(dfe)), rep(2, ncol(matrixe))), ka = 4, kb = 4)
+t2 <- biSBM(adj, nodeType = c(rep(1, nrow(dfe)), rep(2, ncol(matrixe))), ka = 4, kb = 4)
 t2
 adj
 
@@ -161,11 +161,11 @@ adj2 <- get.adjacency(p2, sparse = FALSE)
 
 nodeType2 <-  c(rep(1, nrow(dfe_n2)), rep(2, ncol(matrix2)))
 
-t3 <- biSBM(adj2, nodeType2, ka = 2, kb = 1, iter = 1)
+t3 <- biSBM(adj2, nodeType2, ka = 4, kb = 4, iter = 20)
 
-t3
+t3$groups
 
-ka <- 1:15  # relabelled x
+  ka <- 1:15  # relabelled x
 kb <- 1:10  # relabelled y
 
 filtered_test <- merge(ka, kb) %>% 
@@ -316,3 +316,63 @@ gls_grp <- dfe_n2 %>%
   arrange(`4:4`, `5:4`, `5:5`, `5:6`)
 
 # save(refs_grp, gls_grp, file = "data/biSBMgroups.rda")
+
+
+# matrix plotting ---------------------------------------------------------
+
+sorted_refs <- dfe_n2 %>% 
+  select(Reference, WHO.2014:APHA.2014) %>% 
+  mutate(rf_group = t3$groups[t3$groups<5],
+         rf_group = case_when(
+           rf_group == 1 ~ 1,
+           rf_group == 2 ~ 4,
+           rf_group == 3 ~ 2,
+           rf_group == 4 ~ 3,
+           TRUE ~ rf_group
+         ),
+         Reference = reorder(Reference, rf_group)) 
+
+gls_grp <- tibble(gls = colnames(matrix2),
+                  gl_group = t3$groups[t3$groups>=5]) %>%
+  mutate(gl_group = case_when(
+    gl_group== 5 ~ 6,
+    gl_group== 6 ~ 5,
+    gl_group== 7 ~ 7,
+    gl_group== 8 ~ 8,
+    TRUE ~ gl_group
+  ))
+
+gls_breaks <-  gls_grp %>% 
+  group_by(gl_group) %>% 
+  count() %>% 
+  ungroup() %>% 
+  mutate(n = cumsum(n)+ 0.5) %>% 
+  pull(n) %>% 
+  c(0,.)
+
+rf_breaks <- sorted_refs %>% 
+  group_by(rf_group) %>% 
+  count() %>% 
+  ungroup() %>% 
+  mutate(n = cumsum(n)+ 0.5) %>% 
+  pull(n) %>% 
+  c(0,.)
+  
+
+sorted_refs %>% 
+    group_by(rf_group) %>% 
+    pivot_longer(WHO.2014:APHA.2014,names_to = "gls", values_to = "cited") %>% 
+  left_join(gls_grp, by = 'gls') %>% 
+  arrange(rf_group, gl_group) %>% 
+  mutate(gls = reorder(gls, gl_group)) %>% 
+  ggplot(aes(Reference, gls, fill = factor(cited))) +
+  geom_tile(colour = "white", size = 0.1) +
+  scale_fill_manual(values = c('white', sphsu_cols("Thistle", names = FALSE))) +
+  geom_hline(yintercept = gls_breaks, col = 'blue') +
+  geom_vline(xintercept = rf_breaks, col = 'red') +
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        line = element_blank(),
+        rect = element_blank(),
+        legend.position = "none")
+  
