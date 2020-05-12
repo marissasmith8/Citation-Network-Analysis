@@ -2,7 +2,7 @@
 ### loading and compiling biSBM function
 
 if(Sys.info()["sysname"]=="Windows") {
-  source("biSBMWin.R") } else {
+  source("R/biSBMR/biSBMWin.R") } else {
   source("biSBM.R")
   }
 
