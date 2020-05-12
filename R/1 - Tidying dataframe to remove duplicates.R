@@ -98,7 +98,7 @@ paper_fill <- c("#00843D",
 
 
 fill_dataframe_pres <- 
-  tibble(conf = c("No mention", "None declared", "Pharmaceutical", 
+  tibble(conf = c("No mention", "Declared none", "Pharmaceutical", 
                   "Both e-cigarrette and pharmaceutical", "E-cigarette", "Tobacco company", 
                   "Tobacco control advocate", NA),
          cn_n = c(4, 3, 6, 1, 2, 7, 5, 8),
@@ -111,7 +111,7 @@ fill_dataframe_pres <-
 
 fill_dataframe_paper <- tibble(nrefs = 1:9,
                               st_n = 1:9,
-                              conf = c("No mention", "None declared", "Pharmaceutical", 
+                              conf = c("No mention", "Declared none", "Pharmaceutical", 
                                        "Both e-cigarrette and pharmaceutical", "E-cigarette", "Tobacco company", 
                                        "Tobacco control advocate", NA, NA),
                               cn_n = c(4, 3, 6, 1, 2, 7, 5, 8, 9),
@@ -156,9 +156,9 @@ full_dfe <-  peco_tab %>%
          stud = ifelse(grepl("^[Ss]ystematic.*$", .$stud), "Systematic Review", stud),
          conf = ifelse(grepl("^Pharam.*$", .$conf), "Pharmaceutical", conf),
          conf = ifelse(grepl("^[Oo]utlier.*$", .$conf), "Tobacco control advocate", conf),
-         conf = ifelse(grepl("^[Nn]o conflicts of intere.*$", .$conf), "None declared", conf),
+         conf = ifelse(grepl("^[Nn]o conflicts of intere.*$", .$conf), "Declared none", conf),
          conf = ifelse(grepl("^[Nn]o confl.*stated$", .$conf), "No mention", conf)
-         # conf = ifelse(grepl("^[Nn]o confl*$", .$conf), "None declared", conf)
+         # conf = ifelse(grepl("^[Nn]o confl*$", .$conf), "Declared none", conf)
          ) %>% 
   # pull(conf) %>% unique()  # for testing duplicates
   full_join(dfe_filtered, by = "Reference") %>% 

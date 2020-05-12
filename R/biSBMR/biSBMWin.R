@@ -20,7 +20,7 @@
 ####### click on the variable Path and then the button Edit. Add the path to R in your system and click OK.
 
 
-# system("R/biSBMR/biSBM.bat")
+system("R/biSBMR/biSBM.bat")
 
 ###### After this, you should see the file biSBM_R.dll in your folder. 
 
