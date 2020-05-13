@@ -319,28 +319,32 @@ gls_grp <- dfe_n2 %>%
 
 
 # matrix plotting ---------------------------------------------------------
+nodeType2 <-  c(rep(1, nrow(dfe_n2)), rep(2, ncol(matrix2)))
+
+t3 <- biSBM(adj2, nodeType2, ka = 6, kb = 5, iter = 20)
+
 
 sorted_refs <- dfe_n2 %>% 
   select(Reference, WHO.2014:APHA.2014) %>% 
-  mutate(rf_group = t3$groups[t3$groups<5],
-         rf_group = case_when(
-           rf_group == 1 ~ 1,
-           rf_group == 2 ~ 4,
-           rf_group == 3 ~ 2,
-           rf_group == 4 ~ 3,
-           TRUE ~ rf_group
-         ),
+  mutate(rf_group = t3$groups[t3$groups<=attr(t3, "a_grps")],
+         # rf_group = case_when(
+         #   rf_group == 1 ~ 1,
+         #   rf_group == 2 ~ 4,
+         #   rf_group == 3 ~ 2,
+         #   rf_group == 4 ~ 3,
+         #   TRUE ~ rf_group
+         # ),
          Reference = reorder(Reference, rf_group)) 
 
 gls_grp <- tibble(gls = colnames(matrix2),
-                  gl_group = t3$groups[t3$groups>=5]) %>%
-  mutate(gl_group = case_when(
-    gl_group== 5 ~ 6,
-    gl_group== 6 ~ 5,
-    gl_group== 7 ~ 7,
-    gl_group== 8 ~ 8,
-    TRUE ~ gl_group
-  ))
+                  gl_group = t3$groups[t3$groups>attr(t3, "a_grps")])  # %>%
+  # mutate(gl_group = case_when(
+  #   gl_group== 5 ~ 6,
+  #   gl_group== 6 ~ 5,
+  #   gl_group== 7 ~ 7,
+  #   gl_group== 8 ~ 8,
+  #   TRUE ~ gl_group
+  # ))
 
 gls_breaks <-  gls_grp %>% 
   group_by(gl_group) %>% 
@@ -376,3 +380,5 @@ sorted_refs %>%
         rect = element_blank(),
         legend.position = "none")
   
+
+
