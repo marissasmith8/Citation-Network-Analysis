@@ -24,6 +24,11 @@ refs_lines <-refs_by_cluster %>%  select(Reference, r_clust) %>% unique() %>% gr
 gl_lines <-refs_by_cluster %>%  select(gldocs, g_clust) %>% unique() %>% group_by(g_clust) %>% count() %>% ungroup() %>% mutate(n = cumsum(n)) %>%  pull(n) +0.5
 refs_by_cluster %>% mutate(Reference=reorder(Reference, r_clust), gldocs=reorder(gldocs,g_clust), cited=factor(cited)) %>%
   ggplot(aes(Reference, gldocs, fill= cited)) +geom_tile() +
-  scale_fill_manual(values = c("white", "black"))+ geom_hline(yintercept=gl_lines) +geom_vline(xintercept = refs_lines)
-  
+  scale_fill_manual(values = c("white", "black"))+ geom_hline(yintercept=gl_lines) +geom_vline(xintercept = refs_lines) + 
+  scale_y_discrete(expand = c(0,0)) +
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        axis.line = element_line(colour = "black"),
+        panel.background = element_blank())
 
+#svglite::svglite("output/blockmodelling -MS.svg", width=300/25, height = 150/25) 
