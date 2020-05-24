@@ -30,5 +30,4 @@ refs_by_cluster %>% mutate(Reference=reorder(Reference, r_clust), gldocs=reorder
         axis.ticks.x = element_blank(),
         axis.line = element_line(colour = "black"),
         panel.background = element_blank())
-
-#svglite::svglite("output/blockmodelling -MS.svg", width=300/25, height = 150/25) 
+ggsave(file = "blockmodelling.svg", width=300/25, height = 150/25) 
