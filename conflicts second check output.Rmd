@@ -6,11 +6,11 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-library(googlesheets)
+library(googlesheets4)
 library(tidyverse)
 library(knitr)
 
-sheet <- gs_title("new_conflicts")
+sheet <- read_sheet()
 
 conflicts <- gs_read(sheet, ws = "conflicts_1203")
 ```

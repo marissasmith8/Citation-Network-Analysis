@@ -23,10 +23,14 @@ coitydf<-
     group_by(g_clust) %>% 
     mutate(prop=n/sum(n))
 
-coitydf %>% 
+coimx <-coitydf %>% 
   select(-prop) %>% 
   pivot_wider(names_from = "g_clust", values_from = "n") %>% 
-  chisq.test ()
+  select(-coi_type) %>% 
+  as.matrix() %>% 
+  chisq.test()
+  
+  
 
                 
               

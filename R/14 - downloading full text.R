@@ -19,7 +19,8 @@ library(tabulizer)
 library(fuzzyjoin)
 
 load("data/googlesheets_results.rda")
-
+sheets_results <- read_sheet(
+  "https://docs.google.com/spreadsheets/d/1boszwpnoQ-2stzg396kcM7eh0fibB2oA_voZEVw-rWs/edit#gid=134539849", sheet = "complete")
 files <- list.files(path = "Documents/E-cigarette citation library.Data/PDF/", recursive = TRUE, pattern = "*.pdf")
 
 dois <- str_remove_all(files, "(^\\d*/|-\\d*\\.pdf$)") %>% 
