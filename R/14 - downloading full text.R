@@ -1,4 +1,4 @@
-library(googlesheets4)
+library(googlesheets)
 library(readr)
 library(tidyverse)
 library(rscopus)
@@ -20,7 +20,8 @@ library(tabulizer)
 library(fuzzyjoin)
 
 load("data/googlesheets_results.rda")
-
+sheets_results <- read_sheet(
+  "https://docs.google.com/spreadsheets/d/1boszwpnoQ-2stzg396kcM7eh0fibB2oA_voZEVw-rWs/edit#gid=134539849", sheet = "complete")
 files <- list.files(path = "Documents/E-cigarette citation library.Data/PDF/", recursive = TRUE, pattern = "*.pdf")
 
 dois <- str_remove_all(files, "(^\\d*/|-\\d*\\.pdf$)") %>% 
@@ -126,12 +127,9 @@ write_csv(conflicts, "data/conflicts.csv")
 # vis results -------------------------------------------------------------
 
 
-# sheets_results <- gs_title("Ongoing results screening") %>%  gs_read(ws = "complete")
+sheets_results <- gs_title("Ongoing results screening") %>%  gs_read(ws = "complete")
 
-# sheets_results %>% group_by(type) %>% tally() %>% write.csv("outputs/results.csv")
-
-sheets_results <- read_sheet(
-  "https://docs.google.com/spreadsheets/d/1boszwpnoQ-2stzg396kcM7eh0fibB2oA_voZEVw-rWs/edit#gid=134539849", sheet = "complete")
+sheets_results %>% group_by(type) %>% tally() %>% write.csv("outputs/results.csv")
 
 tots <- sheets_results %>%
   group_by(type) %>% 
