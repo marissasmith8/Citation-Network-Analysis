@@ -3,6 +3,7 @@ library(readr)
 library(tidyverse)
 library(rscopus)
 library(fuzzyjoin)
+library(janitor)
 
 # sheet <- gs_title("Ongoing results screening")
 

@@ -26,7 +26,7 @@ gl_lines <-refs_by_cluster %>%  select(gldocs, g_clust) %>% unique() %>% group_b
 
 refs_by_cluster %>% mutate(Reference=reorder(Reference, r_clust), gldocs=reorder(gldocs,g_clust), cited=factor(cited)) %>%
   ggplot(aes(Reference, gldocs, fill= cited)) +geom_tile() +
-<<<<<<< HEAD
+
   scale_fill_manual(values = c("white", "black"))+ 
   geom_hline(yintercept=gl_lines) +
   geom_vline(xintercept = refs_lines) + 
@@ -37,15 +37,3 @@ refs_by_cluster %>% mutate(Reference=reorder(Reference, r_clust), gldocs=reorder
         panel.background = element_blank())
 
 ggsave(file = "graphs/blockmodelling.svg", width=300/25, height = 150/25)
-
-svglite::svglite(file = "graphs/blockmodelling.svg", width=300/25, height = 150/25) 
-=======
-  scale_fill_manual(values = c("white", "black"))+ geom_hline(yintercept=gl_lines) +geom_vline(xintercept = refs_lines) + 
-  scale_y_discrete(expand = c(0,0)) +
-  theme(axis.text.x = element_blank(),
-        axis.ticks.x = element_blank(),
-        axis.line = element_line(colour = "black"),
-        panel.background = element_blank())
-
-#svglite::svglite("output/blockmodelling -MS.svg", width=300/25, height = 150/25) 
->>>>>>> 1181c0eec45aa5bf9061de0a0cadbfe8fcc3bc1a
