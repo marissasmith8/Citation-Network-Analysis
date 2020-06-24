@@ -10,7 +10,7 @@ library(SPHSUgraphs)
 # Import and clean dataset -----------------------------------------------------------------------------------
 
 
-import <- readxl::read_xlsx("./data/Refs full - corrected Feb20.xlsx", sheet = "Clean References ")  # import 'Clean References' sheet
+import <- readxl::read_xlsx("./data/Refs full - corrected Jun20.xlsx", sheet = "Clean References ")  # import 'Clean References' sheet
 # import <- readxl::read_xlsx("./data/Refs full - corrected.xlsx", sheet = "Clean References ")  # import 'Clean References' sheet
 
 # Relevant rows

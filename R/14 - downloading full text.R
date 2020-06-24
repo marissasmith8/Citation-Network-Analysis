@@ -126,31 +126,34 @@ write_csv(conflicts, "data/conflicts.csv")
 # vis results -------------------------------------------------------------
 
 
-sheets_results <- gs_title("Ongoing results screening") %>%  gs_read(ws = "complete")
+sheets_results <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/1boszwpnoQ-2stzg396kcM7eh0fibB2oA_voZEVw-rWs/edit#gid=2077854862", sheet = "complete")
 
-sheets_results %>% group_by(type) %>% tally() %>% write.csv("outputs/results.csv")
+# sheets_results %>% group_by(type) %>% tally() 
 
-tots <- sheets_results %>%
+sheets_tidied <- sheets_results %>%
   select(Reference,type) %>% 
-  unique() %>% 
+  unique()
+
+tots <-   sheets_tidied %>% 
   group_by(type) %>% 
   tally() %>% 
-  select(type, `Total across all contexts` = n)
+  select(type, `Total across all contexts` = n) 
 
-sheets_results %>% 
-  select(Reference,type) %>% 
-  left_join(dfe,by="Reference") %>% 
-  select(-nrefs, -nr_fill, -Reference) %>% 
-  pivot_longer(-type, names_to = "gl_doc", values_to = "cited") %>% 
-  group_by(gl_doc,type) %>% 
-  summarise(ncited=sum(cited,na.rm = TRUE)) %>% 
-  pivot_wider(names_from = gl_doc, values_from = ncited) %>% 
-  adorn_totals(where=c("row","col"))
+tots %>% 
+    write.csv("outputs/results.csv")
+
+## Numbered by doc - not used?
+# sheets_tidied %>% 
+#   left_join(dfe,by="Reference") %>% 
+#   select(-nrefs, -nr_fill, -Reference) %>% 
+#   pivot_longer(-type, names_to = "gl_doc", values_to = "cited") %>% 
+#   group_by(gl_doc,type) %>% 
+#   summarise(ncited=sum(cited,na.rm = TRUE)) %>% 
+#   pivot_wider(names_from = gl_doc, values_from = ncited) %>% 
+#   adorn_totals(where=c("row","col"))
  
 
-  sheets_results %>% 
-    select(Reference,type) %>% 
-    unique() %>% 
+  sheets_tidied %>% 
     left_join(dfe,by="Reference") %>% 
     select(-nrefs, -nr_fill) %>% 
     pivot_longer(-c(type, Reference), names_to = "gl_doc", values_to = "cited") %>%
@@ -166,7 +169,7 @@ sheets_results %>%
     pivot_wider(names_from = context, values_from = ncited, values_fill = list(ncited=0)) %>% 
     right_join(tots, by = "type") %>% 
     adorn_totals(where="row") %>% 
-    table2doc(digits=0,"outputs/citation context groups.docx")
+    export::table2doc(digits=0,"outputs/citation context groups.docx")
 
 
  
