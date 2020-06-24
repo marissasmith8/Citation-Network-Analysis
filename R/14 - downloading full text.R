@@ -127,8 +127,8 @@ write_csv(conflicts, "data/conflicts.csv")
 # vis results -------------------------------------------------------------
 
 
-sheets_results <- gs_title("Ongoing results screening") %>%  gs_read(ws = "complete")
-
+# sheets_results <- gs_title("Ongoing results screening") %>%  gs_read(ws = "complete")
+sheets_results <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/1boszwpnoQ-2stzg396kcM7eh0fibB2oA_voZEVw-rWs/edit#gid=2077854862", sheet = "complete")
 sheets_results %>% group_by(type) %>% tally() %>% write.csv("outputs/results.csv")
 
 tots <- sheets_results %>%
