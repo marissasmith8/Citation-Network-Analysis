@@ -37,3 +37,18 @@ sheets_tidied %>%
   mutate(year = str_extract(Reference, "\\d{4}") %>% 
            as.integer())
   
+deduplicated_conflicts <- read_xlsx("data/corrected_deduplicated.xlsx", sheet = "COI1203")
+deduplicated_conflicts %>% left_join(sheets_tidied, by = "Reference") %>% filter(is.na(type.y)) %>% pull(Reference)
+
+
+deduplicated_conflicts %>% 
+  select(Reference, type) %>% 
+  anti_join(sheets_tidied, by = c("Reference", "type"))
+
+conflicts_tidy %>% 
+  select(Reference, type) %>% 
+  anti_join(sheets_tidied, by = c("Reference", "type"))
+
+sheets_tidied %>% 
+  filter(type == "Journal article") %>% 
+  anti_join(conflicts_tidy, by = c("Reference", "type"))
