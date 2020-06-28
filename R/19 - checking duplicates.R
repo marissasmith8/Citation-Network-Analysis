@@ -49,6 +49,12 @@ conflicts_tidy %>%
   select(Reference, type) %>% 
   anti_join(sheets_tidied, by = c("Reference", "type"))
 
-sheets_tidied %>% 
+  sheets_tidied %>% 
   filter(type == "Journal article") %>% 
-  anti_join(conflicts_tidy, by = c("Reference", "type"))
+  anti_join(deduplicated_conflicts, by = c("Reference", "type"))
+  
+  deduplicated_conflicts %>% filter(type != "Journal article")
+  
+sheets_tidied %>% 
+    group_by(type) %>% 
+    count() 

@@ -1,4 +1,4 @@
-library(tidyr)
+=library(tidyr)
 library(stringr)
 
 # table by conflicts of interest ------------------------------------------
