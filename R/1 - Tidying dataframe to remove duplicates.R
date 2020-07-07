@@ -2,6 +2,7 @@ library(dplyr)
 library(readxl)
 library(purrr)
 library(stringr)
+library(ggplot2)
 library(SPHSUgraphs)
 
 #  This script imports the data and creates a dataframe of all refs/reports
