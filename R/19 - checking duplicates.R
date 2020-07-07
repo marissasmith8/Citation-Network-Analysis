@@ -54,14 +54,6 @@ conflicts_tidy %>%
   sheets_tidied %>% 
   filter(type == "Journal article") %>% 
   anti_join(deduplicated_conflicts, by = c("Reference", "type"))
-<<<<<<< HEAD
-  
-  deduplicated_conflicts %>% filter(type != "Journal article")
-  
-sheets_tidied %>% 
-    group_by(type) %>% 
-    count() 
-=======
 
 
 deduplicated_conflicts %>% filter(type != "Journal article") %>% 
@@ -71,4 +63,4 @@ deduplicated_conflicts %>% filter(type != "Journal article") %>%
 sheets_tidied %>% 
   group_by(type) %>% 
   count()
->>>>>>> 22a5be82930d9642ea74834aac1d9984dea0fd64
+
