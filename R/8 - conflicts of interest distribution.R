@@ -1,5 +1,6 @@
 library(tidyr)
 library(stringr)
+library(ellipsis)
 
 # table by conflicts of interest ------------------------------------------
 

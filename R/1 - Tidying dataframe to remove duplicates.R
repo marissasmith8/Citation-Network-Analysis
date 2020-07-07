@@ -2,6 +2,7 @@ library(dplyr)
 library(readxl)
 library(purrr)
 library(stringr)
+library(ggplot2)
 library(SPHSUgraphs)
 
 #  This script imports the data and creates a dataframe of all refs/reports
@@ -211,5 +212,6 @@ gl_cols <- tibble(Report = reports_formatted,
                                         rep("AUS", 4),
                                         rep("USA", 3)))) %>% 
   full_join(ccols, by = "context")
+
 
 
