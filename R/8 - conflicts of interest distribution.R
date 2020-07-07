@@ -2,6 +2,8 @@ library(tidyr)
 library(stringr)
 library(ellipsis)
 
+source("./R/1 - Tidying dataframe to remove duplicates.R")
+
 # table by conflicts of interest ------------------------------------------
 
 gls <- factor(c(gsub("\\.", " ", colnames(full_dfe[4:19])), "Total"), ordered = TRUE)
@@ -10,30 +12,39 @@ gls <- factor(c(gsub("\\.", " ", colnames(full_dfe[4:19])), "Total"), ordered = 
 table2 <-
   full_dfe %>% 
   filter(nrefs > 2) %>% 
-  select(3:19) %>% 
+  select(3:19) %>%# 
   group_by(conf) %>% 
-  summarise_all( ~ sum(.)) %>% 
+  summarise_all( ~ sum(.)) %>%
   ungroup() %>% #mutate(Total = rowSums(.[2:17])) %>% 
   gather("Guidelines", "n", -1, factor_key = TRUE) %>% 
   spread(conf, n)%>% 
-  mutate(Total = rowSums(.[3:9]))
+  mutate(Total = rowSums(.[2:8]))
 
-table2[table2$Guidelines == 'Total', 'Total'] <-  97
 
-table3 <- table2 %>% select(-Context) %>% 
-  mutate(Guidelines = factor(gsub("\\.", " ", .$Guidelines), ordered = TRUE)) %>% 
-  gather("Conflicts of interest", "n", -c(1, 9))  %>% 
-  mutate(n = paste0(n, " (", round(n*100/Total, 1), "%)")) %>% 
-  spread(`Conflicts of interest`, n) %>% 
-  gather("Conflicts of interest", "n", -1)  %>% 
-  spread(Guidelines, n) %>% 
-  select(1, as.character(gls))
-
-totals <- as.numeric(as.vector(table3[table3$`Conflicts of interest`=='Total',2:17]))
-
-table3[table3$`Conflicts of interest`=='Total',2:17] <- paste0(totals," (", round(totals*100/97, 1), "%)")
+table3 <- table2 %>% 
+  janitor::adorn_totals(where = "row") %>% 
+  mutate(Guidelines = factor(gsub("\\.", " ", .$Guidelines), ordered = TRUE)) 
 
 write.csv(table3, "outputs/Conflicts table 1.csv", row.names = FALSE)
+
+
+# old code - defunct? ----------------------------------------------------------------------------------------
+
+
+# table2[table2$Guidelines == 'Total', 'Total'] <-  97
+# table3 <- table2 %>% #select(-Context) %>% 
+#   mutate(Guidelines = factor(gsub("\\.", " ", .$Guidelines), ordered = TRUE)) %>% 
+#   gather("Conflicts of interest", "n", -c(1, 9))  %>% 
+#   mutate(n = paste0(n, " (", round(n*100/Total, 1), "%)")) %>% 
+#   spread(`Conflicts of interest`, n) %>% 
+#   gather("Conflicts of interest", "n", -1)  %>% 
+#   spread(Guidelines, n) %>% 
+#   select(1, as.character(gls))
+# 
+# totals <- as.numeric(as.vector(table3[table3$`Conflicts of interest`=='Total',2:17]))
+# 
+# table3[table3$`Conflicts of interest`=='Total',2:17] <- paste0(totals," (", round(totals*100/97, 1), "%)")
+
 
 # # table4 <-
 #   table2 %>% select(-Guidelines) %>% 
