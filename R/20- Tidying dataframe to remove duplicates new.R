@@ -73,9 +73,9 @@ pres_fill = c("#00a84c",
 #                          "pumpkin",
 #                          names = FALSE)
 
-cont_fill <- scales::brewer_pal(palette = 'Spectral')(5) %>% 
+cont_fill <- scales::brewer_pal(palette = 'Spectral')(6) %>% 
   rev() %>% 
-  c(., rep('#blank', 4))
+  c(., rep('#blank', 3))
 
 paper_fill <- c("#00843D",
                 "#00B5D1", 
@@ -114,7 +114,7 @@ fill_dataframe_paper <- tibble(nrefs = 1:9,
 
 # Edit here for colour scheme change
 dfe <- dfd %>% 
-  mutate(nrefs = rowSums(.[2:14])) %>% 
+  mutate(nrefs = rowSums(.[2:15])) %>% 
   full_join(fill_dataframe_paper %>% select(nrefs, nr_fill), by = "nrefs") %>%  # fill_dataframe_[pres/paper]
   # full_join(fill_dataframe_pres %>% select(nrefs, nr_fill), by = "nrefs") %>%  # fill_dataframe_[pres/paper]
   filter(Reference != "No references given")

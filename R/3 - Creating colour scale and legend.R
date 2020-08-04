@@ -8,7 +8,7 @@ source("./R/20- Tidying dataframe to remove duplicates new.R")
 
 # creating dataframes ----------------------------------------------------------------------------------------
 
-legend_df <- tibble(x = factor(1:5),
+legend_df <- tibble(x = factor(1:8),
                     y = 1)  # dummy dataframe for all dots
 
 # Nrefs legend (for filtered and unfiltered) ------------------------------------------------------------
@@ -17,10 +17,10 @@ gr_labels <- dfe_ordered %>% group_by(nrefs) %>%
   count() %>% 
   mutate(labels = paste0(nrefs, " (", n, ")"))
 
-p <- ggplot(legend_df, aes(x, y, col = x)) + 
+p <- ggplot(legend_df[1:6,], aes(x, y, col = x)) + 
   geom_point() +
   scale_color_manual("Number of times\ncited across\nguidelines (n):",
-                     values = fill_dataframe_paper$nr_fill, labels = gr_labels$labels) +
+                     values = fill_dataframe_paper[1:6,]$nr_fill, labels = gr_labels$labels) +
   guides(colour = guide_legend(override.aes = list(size=5))) +
   theme_void()
 
