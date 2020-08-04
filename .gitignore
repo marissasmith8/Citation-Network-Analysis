@@ -10,9 +10,9 @@ graphs/
 Documents/
 .httr-oauth
 .Rprofile
-<<<<<<< HEAD
 biSBM groups ouput.Rmd
 biSBM-groups-ouput.docx
 biSBMWin_R.dll
 *.zip
 *DELL-7XP58Y2*
+!Documents/new_pdfs/*
