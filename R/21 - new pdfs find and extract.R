@@ -54,6 +54,8 @@ library(tabulizer)
 
 sheets_results <- read_sheet(
   "https://docs.google.com/spreadsheets/d/1boszwpnoQ-2stzg396kcM7eh0fibB2oA_voZEVw-rWs/edit#gid=134539849", sheet = "complete")
+already_done <- read_sheet("https://docs.google.com/spreadsheets/d/1Dg1b2GwAxX07zXZQaO2Rb9U8Of3xhRwn25IULYRNAh4", sheet = "conflicts_1203")
+
 
 files <- list.files(path = "Documents/new_pdfs", recursive = TRUE, pattern = "*.pdf")
 
@@ -61,6 +63,12 @@ dirs <- tibble(files = files,
                dirs = paste0("Documents/new_pdfs/", files),
                Reference = str_remove(files, "\\.pdf$"))
 
+no_text <- dfe %>% 
+  left_join(sheets_results, by = "Reference") %>% 
+  filter(type == "Journal article") %>% 
+  anti_join(already_done, by = "Reference") %>% 
+  anti_join(dirs, by = "Reference") %>% 
+  select(Reference, doi, url)
 
 conflicts_screening <- inner_join(sheets_results, dirs, by = "Reference") %>% 
   select(Reference, doi, dirs, title, journal, nrefs, type)
