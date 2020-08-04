@@ -7,7 +7,7 @@ library(purrr)
 
 # new report names -------------------------------------------------------------------------------------------
 
-reports <- colnames(dfe[,2:17])
+reports <- colnames(dfe[,2:14])
 reports
 reports_formatted <- gsub("\\.(\\d{4}$)", "\n\\1", reports)
 reports_formatted <- gsub("\\.", " ", reports_formatted)
@@ -16,9 +16,9 @@ reports_formatted <- gsub("\\.", " ", reports_formatted)
 
 
 groups <- list(WHO = reports_formatted[c(1,2)],
-               UK = reports_formatted[c(3:9)],
-               AUS = reports_formatted[c(10:13)],
-               USA = reports_formatted[c(14:16)]) 
+               UK = reports_formatted[c(3:8)],
+               AUS = reports_formatted[c(9:10)],
+               USA = reports_formatted[c(11:13)]) 
 groups_df <- groups %>% 
   map( ~ tibble(.x)) %>% 
   bind_rows(.id = "Country")

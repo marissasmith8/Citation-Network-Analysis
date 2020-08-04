@@ -3,12 +3,12 @@ library(ggplot2)
 library(SPHSUgraphs)
 library(ggpubr)
 
-source("./R/1 - Tidying dataframe to remove duplicates.R")
+source("./R/20- Tidying dataframe to remove duplicates new.R")
 
 
 # creating dataframes ----------------------------------------------------------------------------------------
 
-legend_df <- tibble(x = factor(1:8),
+legend_df <- tibble(x = factor(1:5),
                     y = 1)  # dummy dataframe for all dots
 
 # Nrefs legend (for filtered and unfiltered) ------------------------------------------------------------
@@ -24,7 +24,7 @@ p <- ggplot(legend_df, aes(x, y, col = x)) +
   guides(colour = guide_legend(override.aes = list(size=5))) +
   theme_void()
 
-# svglite::svglite("outputs/legent_nrefs_paper.svg")
+# svglite::svglite("outputs/legend_nrefs_paper.svg")
 as_ggplot(get_legend(p))
 # dev.off()
 
@@ -40,7 +40,6 @@ st_labels <- full_dfe %>%
   count() %>% 
   unique() %>% arrange(desc(n)) %>% 
   mutate(labels = paste0(stud, " (", n, ")"))
-
 
 
 p <- ggplot(legend_df, aes(x, y, col = x)) +

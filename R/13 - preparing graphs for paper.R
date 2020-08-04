@@ -2,7 +2,7 @@ library(igraph)
 library(tidyverse)
 library(ggraph)
 
-source("./R/1 - Tidying dataframe to remove duplicates.R")
+source("./R/20- Tidying dataframe to remove duplicates new.R")
 
 
 # igraph 1: unfiltered ----------------------------------------------
@@ -17,7 +17,7 @@ gls <- (nrow(dfe_ordered)+1):length(V(ig_allrefs_so))
 V(ig_allrefs_so)$label[gls] <- reports_formatted
 V(ig_allrefs_so)$color[gls] <- gl_cols$fill
 V(ig_allrefs_so)$shape[gls] <- "square"
-V(ig_allrefs_so)$size[gls] <- 11
+V(ig_allrefs_so)$size[gls] <- 14
 
 #  ref dots
 V(ig_allrefs_so)$label[refs] <- NA

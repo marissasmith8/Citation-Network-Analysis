@@ -1,4 +1,4 @@
-source("./R/1 - Tidying dataframe to remove duplicates.R")
+source("./R/20- Tidying dataframe to remove duplicates new.R")
 library(tidyr)
 library(stringr)
 library(igraph)
@@ -21,15 +21,15 @@ ccols <- tibble(context =  as.factor(c("WHO",
 
 
 dref_df <-  dfe %>% 
-  select(2:17) %>% 
+  select(2:14) %>% 
   summarise_all(~ sum(.x)) %>% 
   gather("Guideline", "Nrefs") %>% 
-  bind_rows(tibble(Guideline = c("NHS.2017", "ACS.2018"),
+  bind_rows(tibble(Guideline = c("NHS.2017"),
                    Nrefs = c(0, 0))) %>% 
   mutate(Guideline = str_replace_all(Guideline, "\\.", " ")) %>% 
   bind_cols(tibble(context = as.factor(c(rep("WHO", 2),
-                                         rep("UK", 7),
-                                         rep("AUS", 4),
+                                         rep("UK", 6),
+                                         rep("AUS", 2),
                                          rep("USA", 3),
                                          "UK", "USA")))) %>% 
   full_join(ccols, by = "context") %>% 

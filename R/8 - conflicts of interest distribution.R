@@ -2,7 +2,7 @@ library(tidyr)
 library(stringr)
 library(ellipsis)
 
-source("./R/1 - Tidying dataframe to remove duplicates.R")
+source("./R/20- Tidying dataframe to remove duplicates new.R")
 
 # table by conflicts of interest ------------------------------------------
 
@@ -12,13 +12,13 @@ gls <- factor(c(gsub("\\.", " ", colnames(full_dfe[4:19])), "Total"), ordered = 
 table2 <-
   full_dfe %>% 
   filter(nrefs > 2) %>% 
-  select(3:19) %>%# 
+  select(3:15) %>%# 
   group_by(conf) %>% 
   summarise_all( ~ sum(.)) %>%
-  ungroup() %>% #mutate(Total = rowSums(.[2:17])) %>% 
+  ungroup() %>% #mutate(Total = rowSums(.[2:14])) %>% 
   gather("Guidelines", "n", -1, factor_key = TRUE) %>% 
   spread(conf, n)%>% 
-  mutate(Total = rowSums(.[2:8]))
+  mutate(Total = rowSums(.[2:7]))
 
 
 table3 <- table2 %>% 
@@ -60,10 +60,10 @@ write.csv(table3, "outputs/Conflicts table 1.csv", row.names = FALSE)
 
 table4 <- full_dfe %>% 
   filter(nrefs > 2) %>% 
-  select(3:19) %>% 
+  select(3:15) %>% 
   mutate(id = 1:nrow(.)) %>% 
   # mutate(conf = paste0(1:nrow(.), conf)) %>% 
-  gather("Guidelines", "n", -c(1, 18)) %>% 
+  gather("Guidelines", "n", -c(1, 14)) %>% 
   full_join(tibble(Guidelines = colnames(full_dfe[4:19]), Context = gl_cols$context)) %>% 
   select(-Guidelines) %>% 
   unique() %>% 
