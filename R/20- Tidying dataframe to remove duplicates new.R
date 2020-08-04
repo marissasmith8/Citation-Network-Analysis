@@ -10,11 +10,11 @@ library(SPHSUgraphs)
 
 # Import and clean dataset -----------------------------------------------------------------------------------
 
-import <- readxl::read_xlsx("./data/Refs full - corrected Jul20.xlsx", sheet = "Clean References ")  # import 'Clean References' sheet
-# import <- readxl::read_xlsx("./data/Refs full - corrected Jul20.xlsx", sheet = "Clean References ")  # import 'Clean References' sheet
+import <- readxl::read_xlsx("./data/Refs full - corrected Jul20.xlsx", sheet = "Clean References")  # import 'Clean References' sheet
+# import <- readxl::read_xlsx("./data/Refs full - corrected Jul20.xlsx", sheet = "Clean References")  # import 'Clean References' sheet
 
 # Relevant rows
-df <- import[1:2025, ]
+df <- import[1:2032, ] # all rows now relevant
 
 index <- which(is.na(df$Reference))
 
@@ -24,7 +24,7 @@ dffiltered <- df
 i <- 0
 dfa <- list()
 
-for (p in 1:14) {
+for (p in 1:15) {
   i <- i+1
   j <- index[p]-1
   dfa[[p]] <- data.frame(dffiltered[i:j, c(1, p+1)])
@@ -32,7 +32,7 @@ for (p in 1:14) {
 }
 
 k <- 0
-for (k in 1:14) {
+for (k in 1:length(dfa)) {
   dfa[[k]][[2]] <- 1
   dfa[[k]] <- dfa[[k]][-1,]
 }
@@ -43,16 +43,7 @@ dfb <- dfa %>% map(~ unique(.x))
 
 # **creating tidy dataframe ----------------------------------------------------------
 
-# blank dfc to join rows
-dfc <- tibble(Reference = as.character())
-
-# bind rows (full_join creates duplicate rows if in 1+ dataframes)
-q <- 1
-
-for (q in 1:length(dfb)) {
-  dfc <- dfc %>% 
-    full_join(dfb[[q]], by = "Reference")
-}
+dfc <- dfb %>% reduce(full_join, by = "Reference")
 
 # de-duplicate rows, remove columns with 0 ref papers
 dfd <- dfc %>% 
@@ -82,9 +73,9 @@ pres_fill = c("#00a84c",
 #                          "pumpkin",
 #                          names = FALSE)
 
-cont_fill <- scales::brewer_pal(palette = 'Spectral')(6) %>% 
+cont_fill <- scales::brewer_pal(palette = 'Spectral')(5) %>% 
   rev() %>% 
-  c(.,'#blank')
+  c(., rep('#blank', 4))
 
 paper_fill <- c("#00843D",
                 "#00B5D1", 
@@ -134,7 +125,7 @@ row_names_dfe_ordered <- dfe_ordered %>% pull(Reference)
 
 # **Formatting Guideline doc names ----------------------------------------------
 
-reports <- colnames(dfe[,2:14])
+reports <- colnames(dfd %>% select(-(Reference)))
 reports_formatted <- gsub("\\.(\\d{4}$)", "\n\\1", reports)  # adding line breaks
 reports_formatted <- gsub("\\.", " ", reports_formatted)  # adding space in one instance
 
@@ -174,7 +165,7 @@ full_dfe <-  peco_tab %>%
 
 
 mt_allrefs_so <- dfe_ordered %>%
-  select(2:14) %>%
+  select(-c(Reference, nrefs, nr_fill)) %>%
   as.matrix
 
 row.names(mt_allrefs_so) <- row_names_dfe_ordered
@@ -186,8 +177,8 @@ colnames(mt_allrefs_so) <- reports_formatted
 # Filtered matrix for igraphs 2-4 -----------------------------------------
 
 mt_fl_so <- full_dfe %>% 
-  select(4:19) %>% 
-  # select(-Reference, -nrefs, -fill, -stud, -st_n, -conf, -cn_n) %>% 
+  select(4:17) %>%
+  # select(-Reference, -nrefs, -fill, -stud, -st_n, -conf, -cn_n) %>%
   as.matrix()
 
 row.names(mt_fl_so) <- full_dfe$Reference
@@ -208,10 +199,7 @@ ccols <- tibble(context =  as.factor(c("WHO",
 
 gl_cols <- tibble(Report = reports_formatted,
                   context = as.factor(c(rep("WHO", 2),
-                                        rep("UK", 6),
+                                        rep("UK", 7),
                                         rep("AUS", 2),
                                         rep("USA", 3)))) %>% 
   full_join(ccols, by = "context")
-
-
-
