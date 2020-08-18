@@ -90,3 +90,26 @@ conflicts <- conflicts %>%
   mutate(conflicts = map_chr(.$conflicts, ~paste(.x, collapse = "\n")))
 
 sheet_append(data = conflicts, ss = "https://docs.google.com/spreadsheets/d/1Dg1b2GwAxX07zXZQaO2Rb9U8Of3xhRwn25IULYRNAh4", sheet = "conflicts_1203")
+
+
+
+# join to select cited references -----------------------------------------
+
+library(openxlsx)
+library(tidyverse)
+library(googlesheets4)
+
+source("./R/20- Tidying dataframe to remove duplicates new.R")
+
+completed_conflicts_full <- read_sheet("https://docs.google.com/spreadsheets/d/1Dg1b2GwAxX07zXZQaO2Rb9U8Of3xhRwn25IULYRNAh4", sheet = "conflicts_1203")
+
+included_conflicts <- completed_conflicts_full %>% 
+  semi_join(dfe, by = "Reference") %>% 
+  select(-c(other1:other8))
+
+excel_file <- openxlsx::loadWorkbook("data/sumif_example.xlsx")
+removeWorksheet(excel_file, "Coi 1203")
+addWorksheet(excel_file, "Coi 1203")
+writeData(excel_file, "Coi 1203", included_conflicts)
+
+saveWorkbook(excel_file, "data/updated_conflicts_graphs.xlsx", overwrite = TRUE)
