@@ -1,5 +1,5 @@
 source("R/biSBMR/biSBMWin.R")
-source("./R/1 - Tidying dataframe to remove duplicates.R")
+source("./R/20- Tidying dataframe to remove duplicates new.R")
 
 library(tidyverse)
 library(igraph)
@@ -8,14 +8,14 @@ matrix_e <- df_filter %>% select(-Reference, -nr_fill,-nrefs) %>% as.matrix()
 row.names(matrix_e) <- df_filter[["Reference"]]
 
 adj <- get.adjacency(graph.incidence(matrix_e), sparse = FALSE)
-nodesType <- c(rep(1,307),rep(2,16))
+nodesType <- c(rep(1,192),rep(2,14))
 clust1 <-biSBM(adj,nodeType = nodesType, ka=4,kb=4)
 colnames(matrix_e)
 glclusts<-tibble(gldocs=colnames(matrix_e), 
-                 g_clust=clust1$groups[308:323])
+                 g_clust=clust1$groups[193:206])
 
 
-refs_by_cluster<-mutate(df_filter, r_clust=clust1$groups[1:307]) %>% 
+refs_by_cluster<-mutate(df_filter, r_clust=clust1$groups[1:192]) %>% 
  select(-nr_fill, -nrefs) %>% 
   pivot_longer(-c(Reference, r_clust),names_to = "gldocs", values_to = "cited") %>% 
   left_join(glclusts, by="gldocs") %>% 
