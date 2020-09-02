@@ -42,7 +42,7 @@ st_labels <- full_dfe %>%
   mutate(labels = paste0(stud, " (", n, ")"))
 
 
-p <- ggplot(legend_df[1:7,], aes(x, y, col = x)) +
+p <- ggplot(legend_df[1:6,], aes(x, y, col = x)) +
   geom_point() +
   scale_colour_manual("Type of citation:", values = st_labels$st_fill, labels = st_labels$labels) +
   guides(colour = guide_legend(override.aes = list(size=5))) +
