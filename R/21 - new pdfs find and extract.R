@@ -59,7 +59,9 @@ sheets_results <- read_sheet(
 already_done <- read_sheet("https://docs.google.com/spreadsheets/d/1Dg1b2GwAxX07zXZQaO2Rb9U8Of3xhRwn25IULYRNAh4", sheet = "conflicts_1203")
 
 
-files <- list.files(path = "Documents/Citation-Network-Analysis-New/Citation-Network-Analysis-New/Missing PDFs Jul", recursive = TRUE, pattern = "*.pdf")
+files <- list.files(path = "Missing PDFs Aug", recursive = TRUE, pattern = "*.pdf")  
+
+
 
 dirs <- tibble(files = files, 
                dirs = paste0("Documents/new_pdfs/", files),
