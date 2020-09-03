@@ -1,3 +1,10 @@
+input <- readline("This is the old file. To continue reading type 'old', otherwise hit return: ")
+
+if (input == "") {
+  source("./R/20- Tidying dataframe to remove duplicates new.R")
+} else if (input == "old") {
+  
+
 library(dplyr)
 library(readxl)
 library(purrr)
@@ -49,6 +56,7 @@ dfc <- tibble(Reference = as.character())
 
 # bind rows (full_join creates duplicate rows if in 1+ dataframes)
 q <- 1
+
 
 for (q in 1:length(dfb)) {
   dfc <- dfc %>% 
@@ -213,5 +221,6 @@ gl_cols <- tibble(Report = reports_formatted,
                                         rep("USA", 3)))) %>% 
   full_join(ccols, by = "context")
 
-
-
+} else {
+  source("./R/1 - Tidying dataframe to remove duplicates.R")
+}

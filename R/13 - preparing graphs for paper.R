@@ -36,7 +36,7 @@ E(ig_allrefs_so)$color <- "#97979766"
 tkplot(ig_allrefs_so, layout = layout.fruchterman.reingold, canvas.height = 768, canvas.width = 1366)
 
 #  take coords from interactive plot
-co_ig1 <- tk_coords("2")/500
+co_ig1 <- tk_coords("1")/500
 
 
 svglite::svglite("./graphs/igraph - all refs - coloured - no groups - paper.svg", width = 300/25, height = 150/25)

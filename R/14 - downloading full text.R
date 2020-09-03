@@ -132,6 +132,7 @@ sheets_results <- googlesheets4::read_sheet("https://docs.google.com/spreadsheet
 
 sheets_tidied <- sheets_results %>%
   select(Reference,type) %>% 
+  semi_join(dfe, by = "Reference") %>% 
   unique()
 
 tots <-   sheets_tidied %>% 
