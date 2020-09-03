@@ -203,3 +203,4 @@ gl_cols <- tibble(Report = reports_formatted,
                                         rep("AUS", 2),
                                         rep("USA", 3)))) %>% 
   full_join(ccols, by = "context")
+
