@@ -108,7 +108,7 @@ indexing <- sheets_results %>%
 # upload to google sheets ---------------------------------------------------------
 
 
-library(googlesheets)
+library(googlesheets4)
 library(tidyverse)
 
 load("data/conflicts.rda")
@@ -153,7 +153,7 @@ tots %>%
 #   adorn_totals(where=c("row","col"))
  
 
-  sheets_tidied %>% 
+ sheets_tidied %>% 
     left_join(dfe,by="Reference") %>% 
     select(-nrefs, -nr_fill) %>% 
     pivot_longer(-c(type, Reference), names_to = "gl_doc", values_to = "cited") %>%
