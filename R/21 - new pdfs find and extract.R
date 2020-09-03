@@ -50,6 +50,8 @@ write_file(text4,
 # importing from pdfs -----------------------------------------------------
 
 library(tabulizer)
+library(tidyverse)
+library(googlesheets4)
 
 
 sheets_results <- read_sheet(
