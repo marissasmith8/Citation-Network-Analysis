@@ -6,19 +6,19 @@ source("./R/20- Tidying dataframe to remove duplicates new.R")
 
 # table by conflicts of interest ------------------------------------------
 
-gls <- factor(c(gsub("\\.", " ", colnames(full_dfe[4:19])), "Total"), ordered = TRUE)
+gls <- factor(c(gsub("\\.", " ", colnames(full_dfe[4:14])), "Total"), ordered = TRUE)
 
 
 table2 <-
   full_dfe %>% 
   filter(nrefs > 2) %>% 
-  select(3:15) %>%# 
+  select(3:17) %>%# 
   group_by(conf) %>% 
   summarise_all( ~ sum(.)) %>%
   ungroup() %>% #mutate(Total = rowSums(.[2:14])) %>% 
   gather("Guidelines", "n", -1, factor_key = TRUE) %>% 
   spread(conf, n)%>% 
-  mutate(Total = rowSums(.[2:7]))
+  mutate(Total = rowSums(.[2:6]))
 
 
 table3 <- table2 %>% 
@@ -60,14 +60,14 @@ write.csv(table3, "outputs/Conflicts table 1.csv", row.names = FALSE)
 
 table4 <- full_dfe %>% 
   filter(nrefs > 2) %>% 
-  select(3:15) %>% 
+  select(3:17) %>% 
   mutate(id = 1:nrow(.)) %>% 
   # mutate(conf = paste0(1:nrow(.), conf)) %>% 
   gather("Guidelines", "n", -c(1, 14)) %>% 
-  full_join(tibble(Guidelines = colnames(full_dfe[4:19]), Context = gl_cols$context)) %>% 
+  full_join(tibble(Guidelines = colnames(full_dfe[4:17]), Context = gl_cols$context)) %>% 
   select(-Guidelines) %>% 
   unique() %>% 
-  select(-id) %>% 
+  #select(-id) %>% 
   group_by(Context, conf) %>% 
   summarize(n = sum(n)) %>% 
   spread(Context, n) %>% 
