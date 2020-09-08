@@ -1,4 +1,5 @@
-source("R/biSBMR/biSBMWin.R")
+source("C:/Users/marissa/Documents/Citation-Network-Analysis-New/Citation-Network-Analysis-New/R/biSBMR/biSBMWin.R")
+#R/biSBMR/biSBMWin.R")
 source("./R/20- Tidying dataframe to remove duplicates new.R")
 
 library(tidyverse)
