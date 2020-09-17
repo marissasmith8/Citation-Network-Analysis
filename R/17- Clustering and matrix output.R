@@ -1,8 +1,10 @@
-source("R/biSBMR/biSBMWin.R")
+source("C:/Users/marissa/Documents/Citation-Network-Analysis-New/Citation-Network-Analysis-New/R/biSBMR/biSBMWin.R")
+#R/biSBMR/biSBMWin.R")
 source("./R/20- Tidying dataframe to remove duplicates new.R")
 
 library(tidyverse)
 library(igraph)
+library(export)
 df_filter <-dfe %>% filter(nrefs >1)
 matrix_e <- df_filter %>% select(-Reference, -nr_fill,-nrefs) %>% as.matrix()
 row.names(matrix_e) <- df_filter[["Reference"]]
@@ -36,3 +38,6 @@ refs_by_cluster %>% mutate(Reference=reorder(Reference, r_clust), gldocs=reorder
         panel.background = element_blank())
 
 ggsave(file = "graphs/blockmodelling.svg", width=300/25, height = 150/25)
+
+graph2ppt(last_plot(), "text.pptx")
+          
