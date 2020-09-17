@@ -6,12 +6,13 @@ library(purrr)
 
 source("./R/1 - Tidying dataframe to remove duplicates.R")
 
+par(lwd=3)
 
 filt_mt <- dfe %>% 
   filter(nrefs >1) %>% 
-  select(2:17)
+  select(2:15)
 
-colnames(filt_mt) <- gsub("\\.", " ", colnames(mt_allrefs_so))
+colnames(filt_mt) <- gsub("\\n", " ", colnames(mt_allrefs_so))
 
 mt_byrow <- t(filt_mt)
 
@@ -23,13 +24,13 @@ plot(clust)
 
 ddg <- as.dendrogram(clust)
 
-ddg <- color_branches(ddg, k = 6)
+ddg <- color_branches(ddg, k = 5)
 
 plot(ddg)
 
 pm_6 <- mt_byrow %>% 
   pam(k = 6)
-
+par()
 plot(silhouette(pm_6))
 
 pm_all <- map_dbl(2:10, function(k) {
