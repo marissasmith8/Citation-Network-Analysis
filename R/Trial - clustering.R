@@ -9,7 +9,7 @@ source("./R/1 - Tidying dataframe to remove duplicates.R")
 par(lwd=3)
 
 filt_mt <- dfe %>% 
-  filter(nrefs >1) %>% 
+  filter(nrefs >1) %>%
   select(2:15)
 
 colnames(filt_mt) <- gsub("\\n", " ", colnames(mt_allrefs_so))
@@ -24,7 +24,7 @@ plot(clust)
 
 ddg <- as.dendrogram(clust)
 
-ddg <- color_branches(ddg, k = 5)
+ddg <- color_branches(ddg, k = 6)
 
 plot(ddg)
 
@@ -56,3 +56,4 @@ ggplot(tibble(
 ),
 aes(k, tot.ss)) + geom_line() +
   scale_x_continuous(breaks = 1:10)
+

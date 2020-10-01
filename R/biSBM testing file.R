@@ -8,10 +8,10 @@ source("./R/1 - Tidying dataframe to remove duplicates.R")
 source("R/biSBMR/biSBMWin.R")
 
 
-# unfiltered --------------------------------------------------------------
+# testing if it works  --------------------------------------------------------------
 
 matrixe <- dfe %>% 
-  select(WHO.2014:APHA.2014) %>% 
+  select(2:15) %>% 
   as.matrix() %>% 
   `rownames<-`(dfe$Reference)
 
@@ -26,62 +26,8 @@ t2 <- biSBM(adj, nodeType = c(rep(1, nrow(dfe)), rep(2, ncol(matrixe))), ka = 4,
 t2
 adj
 
-# running function manually -----------------------------------------------
-# 
-# ka <- 1
-# kb <- 2
-# data <- adj
-# nodeType <- c(rep(1, nrow(dfe)), rep(2, ncol(matrixe)))
-# deg.corr <- 1
-# iter <- 1
-# 
-# 
-# if(any(c(ka<0, kb<0, deg.corr<0, iter<0))) stop("ka, kb, deg.corr and iter must be positive");
-# 
-# ### deg.corr can be just 0 or 1
-# if(deg.corr>1 || deg.corr<0) stop("Use deg.corr=1 for the degree corrected SBM and 0 otherwise");
-# 
-# ### loading the shared library
-# dyn.load("R/biSBMR/biSBMWin_R.dll");
-# if(!is.loaded("rFunction")) stop("Something is wrong with the C++ shared library");
-# 
-# ### if the adjacency matrix is supplied, transform it in edgelist
-# ###
-# if(typeof(data)=="list") data <- vapply(data, as.double, numeric(nrow(data)));
-# if(ncol(data)>2){
-#   nn <- ncol(data); ##total nodes
-#   data[lower.tri(data)] <- 0;
-#   nodesA <- which(rowSums(data)==0)[1] - 1;
-#   el1 <- rep(1:nodesA, rowSums(data[1:nodesA, ]));
-#   el2 <- unlist(apply(data[1:nodesA,], 1, function(x) which(x!=0)));
-#   data <- cbind(el1, el2);
-# }
-# 
-# if(min(data)==0){
-#   warning("Network indexing starts from 0", call.=F, immediate.=T);
-#   network <- network + 1;
-#   
-# } 
-# 
-# ## checking dimensions and type for nodeType
-# if(typeof(nodeType)=="list") nodeType <- vapply(nodeType, as.double, numeric(nrow(nodeType)));
-# if(is.atomic(nodeType)) dim(nodeType) <- c(length(nodeType), 1);
-# if((sum(dim(nodeType)) - abs(diff(dim(nodeType))))!=2) stop("nodeType is not a column or row vector");
-# if(!is.double(nodeType)) nodeType <- as.double(nodeType);
-# 
-# if(length(nodeType)!= length(unique(as.numeric(data)))) stop("The number of network's nodes and node types are different. Please, 
-#           check the connected components in your network");
-# 
-# 
-# ### calling C++ algorithm and returning the partition
-# res <-integer(length(nodeType));
-# score <-  numeric(1)
-# t <- .C("rFunction", as.numeric(data), nrow(data), nodeType, length(nodeType), as.integer(ka), 
-#    as.integer(kb), as.integer(deg.corr), as.integer(iter), res=res, score = score)
-# 
 
-
-# loop over multiple ------------------------------------------------------
+# loop over multiple numbers of blocks ------------------------------------------------------
 
 ka <- 1:5
 kb <- 1:5
@@ -151,7 +97,7 @@ dfe_n2 <- dfe %>%
   filter(nrefs > 1) 
 
 matrix2 <- dfe_n2 %>% 
-  select(WHO.2014:APHA.2014) %>% 
+  select(2:15) %>% 
   as.matrix() %>% 
   `rownames<-`(dfe_n2$Reference)
 
