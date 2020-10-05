@@ -5,26 +5,19 @@ library(ggmosaic)
 library(SPHSUgraphs)
 library(patchwork)
 source("./R/20 - Tidying dataframe to remove duplicates new.R")
-source("R/biSBMR/biSBMWin.R")
+source("C:/Users/marissa/Documents/Citation-Network-Analysis-New/Citation-Network-Analysis-New/R/biSBMR/biSBMWin.R")
 
 
-# testing if it works  --------------------------------------------------------------
-
-matrixe <- dfe %>% 
-  select(2:15) %>% 
+# testing if it works  -------------------------------------------------------------
+dfe_filtered <- filter(dfe, nrefs >1)
+matrixe <- dfe_filtered %>%
+    select(2:15) %>%
   as.matrix() %>% 
-  `rownames<-`(dfe$Reference)
+  `rownames<-`(dfe_filtered$Reference)
 
 p <- graph.incidence(matrixe)
 
 adj <- get.adjacency(p, sparse = FALSE)
-
-t1 <- biSBM(adj, nodeType = c(rep(1, nrow(dfe)), rep(2, ncol(matrixe))), ka = 1, kb = 2)
-
-
-t2 <- biSBM(adj, nodeType = c(rep(1, nrow(dfe)), rep(2, ncol(matrixe))), ka = 4, kb = 4)
-t2
-adj
 
 
 # loop over multiple numbers of blocks ------------------------------------------------------
@@ -64,14 +57,17 @@ second_test %>%
 # long_test ---------------------------------------------------------------
 ka <- 1:15 #refs
 kb <- 1:10 #guidelines
+nodeType = c(rep(1, nrow(dfe_filtered)), rep(2, ncol(matrixe)))
+
 
 third_test <- merge(ka, kb) %>% 
   as_tibble() %>% 
-    filter(x>5|y>5) %>% 
-  mutate(group_model = map2(x, y, ~biSBM(adj, nodeType, .x, .y, iter = 5))) %>% 
-  mutate(score = map_dbl(group_model, ~ pluck(.x$score[1])))
+  filter(x>5|y>5) %>% 
+  mutate(group_model = map2(x, y, ~biSBM(adj, nodeType, .x, .y, iter = 5))) 
+ 
 
-all_tests <- bind_rows(first_test, third_test)
+all_tests <- bind_rows(first_test, third_test) %>% 
+  mutate(score = map_dbl(group_model, ~ pluck(.x$score[1])))
 
 points <- all_tests$score %>% 
   matrix(nrow = 15)
@@ -80,7 +76,7 @@ plot_ly(x = 1:10, y = 1:15, z = points) %>% add_surface()
 api_create(last_plot(), "max_biSBM_score")
 
 all_tests %>% 
-  filter(y == 5) %>% 
+  filter(y == 6) %>% 
   ggplot(aes(x, score)) + 
   geom_line() +
   xlab("y")
@@ -111,7 +107,7 @@ t3 <- biSBM(adj2, nodeType2, ka = 4, kb = 4, iter = 20)
 
 t3$groups
 
-  ka <- 1:15  # relabelled x
+ka <- 1:15  # relabelled x
 kb <- 1:10  # relabelled y
 
 filtered_test <- merge(ka, kb) %>% 
@@ -135,10 +131,10 @@ kb <- 1:8
 
 points_repeat <- merge(ka, kb) %>% 
   as_tibble() %>% 
-  mutate(group_model = map2(x, y, ~biSBM(adj2, nodeType2, .x, .y, iter = 10))) %>% 
+  mutate(group_model = map2(x, y, ~biSBM(adj, nodeType, .x, .y, iter = 10))) %>% 
   mutate(score = map_dbl(group_model, ~ pluck(.x$score[1])))
 
-# save(points_repeat, file = "data/biSBM_points.rda")
+save(points_repeat, all_tests, file = "data/biSBM_points.rda")
 
 # starting from fresh session ---------------------------------------------
 
@@ -146,18 +142,18 @@ load("data/biSBM_points.rda")
 
 points2 <- points_repeat$score %>% 
   matrix(nrow = 8, byrow = TRUE)
-  
+
 
 plot_ly(x = 1:8, y = 1:8, z = points2) %>% add_surface()
 # api_create(last_plot(), "max_biSBM_score_filtered_10iter")
 # Identified three points for testing
 
-test_points <- tibble(x = c(1, 4, 5, 5, 5, 8),
-                      y = c(1, 4, 4, 5, 6, 8))
+test_points <- tibble(x = c(1, 3, 4, 5, 6, 8),
+                      y = c(1, 3, 3, 4, 6, 8))
 
 test_points %>% 
   left_join(points_repeat, by = c("x", "y")) %>% 
-  mutate(deg_freedom = x+y-1) %>% 
+  mutate(deg_freedom = x+y-2) %>% 
   arrange(deg_freedom) %>% 
   mutate(lr = -2*(lag(score, default = score[1]) - score),
          diffdeg = deg_freedom - lag(deg_freedom, default = 0),
@@ -167,14 +163,14 @@ test_points %>%
 
 merge(1:8,1:8) %>% 
   left_join(points_repeat, by = c("x", "y")) %>% 
-  mutate(deg_freedom = x+y-1) %>% 
+  mutate(deg_freedom = x+y-2) %>% 
   group_by(deg_freedom) %>%
   summarise(score = max(score)) %>%
   left_join(points_repeat, by = c("score")) %>% 
   mutate(lr = -2*(lag(score, default = score[1]) - score),
          diffdeg = deg_freedom - lag(deg_freedom, default = 0),
-         p = pchisq(lr, diffdeg, lower.tail = FALSE)) %>% View()
-  ggplot(aes(deg_freedom, score)) +
+         p = pchisq(lr, diffdeg, lower.tail = FALSE)) %>%
+ggplot(aes(deg_freedom, score)) +
   geom_line()
 
 
@@ -182,27 +178,27 @@ merge(1:8,1:8) %>%
 
 # taking out models we want to compare ------------------------------------
 
-  key_points <- tibble(x = c(4, 5, 5, 5),
-                       y = c(4, 4, 5, 6))
-  
+key_points <- tibble(x = c(3, 4, 5, 6),
+                     y = c(3, 4, 4, 6))
+
 groupings <- points_repeat %>% 
   semi_join(key_points, by = c("x", "y")) %>% 
   mutate(model = map(group_model, ~ pluck(.x$groups))) %>% 
   select(x, y, model) %>% 
   unite("xy", x, y, sep = ":")
 
-p1 <- dfe_n2 %>% 
+p1 <- dfe_filtered %>% 
   select(Reference) %>% 
-  cbind(groupings$model[[1]][1:304]) %>% 
-  cbind(groupings$model[[2]][1:304]) %>% 
-  cbind(groupings$model[[3]][1:304]) %>% 
-  cbind(groupings$model[[4]][1:304]) %>% 
+  cbind(groupings$model[[1]][1:192]) %>% 
+  cbind(groupings$model[[2]][1:192]) %>% 
+  cbind(groupings$model[[3]][1:192]) %>% 
+  cbind(groupings$model[[4]][1:192]) %>% 
   `names<-`(c("Reference", groupings$xy)) %>% 
   as_tibble() %>% 
-  arrange(`4:4`, `5:4`, `5:5`, `5:6`) %>% 
+  arrange(`3:3`, `4:4`, `5:4`, `6:6`) %>% 
   mutate_at(2:5, ~ as.numeric(factor(as.character(.x), levels = unique(.x)))) %>% 
   mutate(n = nrow(.):1,
-           Reference = reorder(Reference, n)) %>% 
+         Reference = reorder(Reference, n)) %>% 
   pivot_longer(2:5, names_to = "n_groups", values_to = "group") %>% 
   mutate(n_groups = factor(n_groups)) %>% 
   ggplot(aes(n_groups, Reference, fill = factor(group))) +
@@ -211,7 +207,7 @@ p1 <- dfe_n2 %>%
   theme_sphsu_light()
 
 
-p2 <- dfe_n2 %>% 
+p2 <- dfe_filtered %>% 
   select(WHO.2014:APHA.2014) %>% 
   colnames() %>% 
   tibble() %>% 
@@ -247,7 +243,7 @@ refs_grp <- dfe_n2 %>%
   `names<-`(c("Reference", groupings$xy)) %>% 
   as_tibble() %>% 
   arrange(`4:4`, `5:4`, `5:5`, `5:6`) 
- 
+
 gls_grp <- dfe_n2 %>% 
   select(WHO.2014:APHA.2014) %>% 
   colnames() %>% 
@@ -284,13 +280,13 @@ sorted_refs <- dfe_n2 %>%
 
 gls_grp <- tibble(gls = colnames(matrix2),
                   gl_group = t3$groups[t3$groups>attr(t3, "a_grps")])  # %>%
-  # mutate(gl_group = case_when(
-  #   gl_group== 5 ~ 6,
-  #   gl_group== 6 ~ 5,
-  #   gl_group== 7 ~ 7,
-  #   gl_group== 8 ~ 8,
-  #   TRUE ~ gl_group
-  # ))
+# mutate(gl_group = case_when(
+#   gl_group== 5 ~ 6,
+#   gl_group== 6 ~ 5,
+#   gl_group== 7 ~ 7,
+#   gl_group== 8 ~ 8,
+#   TRUE ~ gl_group
+# ))
 
 gls_breaks <-  gls_grp %>% 
   group_by(gl_group) %>% 
@@ -307,11 +303,11 @@ rf_breaks <- sorted_refs %>%
   mutate(n = cumsum(n)+ 0.5) %>% 
   pull(n) %>% 
   c(0,.)
-  
+
 
 sorted_refs %>% 
-    group_by(rf_group) %>% 
-    pivot_longer(WHO.2014:APHA.2014,names_to = "gls", values_to = "cited") %>% 
+  group_by(rf_group) %>% 
+  pivot_longer(WHO.2014:APHA.2014,names_to = "gls", values_to = "cited") %>% 
   left_join(gls_grp, by = 'gls') %>% 
   arrange(rf_group, gl_group) %>% 
   mutate(gls = reorder(gls, gl_group)) %>% 
@@ -325,6 +321,6 @@ sorted_refs %>%
         line = element_blank(),
         rect = element_blank(),
         legend.position = "none")
-  
+
 
 
