@@ -67,8 +67,7 @@ V(ig_fl_so)$size[gls3] <- 11
 V(ig_fl_so)$label[refs3] <- NA 
 V(ig_fl_so)$color[refs3] <- full_dfe$nr_fill
 V(ig_fl_so)$shape[refs3] <- "circle"
-V(ig_fl_so)$size[refs3] <- 4
-
+V(ig_fl_so)$size[refs3] <-  full_dfe$nrefs*1.35
 
 # all points
 V(ig_fl_so)$frame.color <- NA
@@ -79,7 +78,7 @@ E(ig_fl_so)$color <- "#97979766"
 
 tkplot(ig_fl_so, layout = layout.fruchterman.reingold, canvas.height = 768, canvas.width = 1366)
 
-co_ig2 <- tk_coords("5")/400
+co_ig2 <- tk_coords("1")/400
 
 svglite::svglite("./graphs/igraph - filtered - coloured - paper.svg", width = 300/25, height = 150/25)
 # svg("./graphs/igraph - filtered - coloured - no groups.svg", bg = "#003865")
@@ -95,7 +94,6 @@ dev.off()
 
 
 # igraph 3: filtered coloured by conflicts ------------------------------------------
-
 
 
 V(ig_fl_so)$color[refs3] <- full_dfe$cn_fill
