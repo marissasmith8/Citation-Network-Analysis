@@ -11,8 +11,11 @@ row.names(matrix_e) <- df_filter[["Reference"]]
 
 adj <- get.adjacency(graph.incidence(matrix_e), sparse = FALSE)
 nodesType <- c(rep(1,192),rep(2,14))
-clust1 <-biSBM(adj,nodeType = nodesType, ka=4,kb=4)
-points_repeat %>%  filter(x==5, y==4) %>% .$group_model %>% .[[1]]
+
+set.seed(5)
+
+clust1 <-biSBM(adj,nodeType = nodesType, ka=5,kb=4, iter=50)
+#points_repeat %>%  filter(x==5, y==4) %>% .$group_model %>% .[[1]]
 colnames(matrix_e)
 glclusts<-tibble(gldocs=colnames(matrix_e), 
                  g_clust=clust1$groups[193:206])
@@ -23,7 +26,13 @@ refs_by_cluster<-mutate(df_filter, r_clust=clust1$groups[1:192]) %>%
   pivot_longer(-c(Reference, r_clust),names_to = "gldocs", values_to = "cited") %>% 
   left_join(glclusts, by="gldocs") %>% 
   select(Reference, gldocs, r_clust, g_clust, cited)
-refs_lines <-refs_by_cluster %>%  select(Reference, r_clust) %>% unique() %>% group_by(r_clust) %>% count() %>% ungroup() %>% mutate(n = cumsum(n)) %>%  pull(n) +0.5
+
+#Counting nrefs and ngls
+nrefs_by_block <- refs_by_cluster %>%  select(Reference, r_clust) %>% unique() %>% group_by(r_clust) %>% count() %>% ungroup() 
+
+
+# creating line break
+refs_lines <-nrefs_by_block %>% mutate(n = cumsum(n)) %>%  pull(n) +0.5
 gl_lines <-refs_by_cluster %>%  select(gldocs, g_clust) %>% unique() %>% group_by(g_clust) %>% count() %>% ungroup() %>% mutate(n = cumsum(n)) %>%  pull(n) +0.5
 
 
@@ -40,5 +49,5 @@ refs_by_cluster %>% mutate(Reference=reorder(Reference, r_clust), gldocs=reorder
 
 ggsave(file = "graphs/blockmodelling.svg", width=300/25, height = 150/25)
 
-graph2ppt(last_plot(), "text.pptx")
+graph2ppt(last_plot(), "text.pptx", append=TRUE)
           
