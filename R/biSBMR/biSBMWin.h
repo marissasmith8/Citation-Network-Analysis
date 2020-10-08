@@ -160,8 +160,8 @@ void biSBM()
   {
     BestState[i] = SavedState[i];
   }
-  cout << "Final Score (wait for it): " << ComputeInitialScore() << endl;
-  BestScore = MaxScore;
+  cout << "Final Score (wait for it! I mean it, really!): " << ComputeInitialScore() << endl;
+  BestScore = HighestScore;
   freegraph();
 }
 

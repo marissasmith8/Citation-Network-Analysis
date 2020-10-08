@@ -145,7 +145,7 @@ extern "C"
       g[i] = BestState[i];
       
     }
-    score[0] = MaxScore;
+    score[0] = BestScore;
    }
   
 } 
