@@ -49,5 +49,5 @@ refs_by_cluster %>% mutate(Reference=reorder(Reference, r_clust), gldocs=reorder
 
 ggsave(file = "graphs/blockmodelling.svg", width=300/25, height = 150/25)
 
-graph2ppt(last_plot(), "text.pptx", append=TRUE)
+graph2ppt(last_plot(), "blockmodelling.pptx", append=TRUE)
           

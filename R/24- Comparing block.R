@@ -161,4 +161,4 @@ all_blocks %>%
 
 all_blocks %>% 
   filter(x == 5, y == 4) %>%   # Choose the clusters to filter for
-  pull(gl_coi_chi)            # choose which value to check out
+  pull(ref_coi_chi)            # choose which value to check out
