@@ -129,12 +129,12 @@ all_blocks <- key_models %>%
   mutate(blocks = map(group_model, ~extract_clust(.x$groups))) %>% 
   unnest_wider(blocks) %>% 
   rowwise() %>% 
-  mutate(across(ends_with("chi"), 
+  mutate_at(vars(gl_coi_chi, ref_coi_chi), 
                 list(p_val = ~ .x$p.value,
                      X_squared = ~ .x$statistic,
                      df = ~ .x$parameter
                      ),
-                .names="{.col}_{.fn}"))
+                .names="{.col}_{.fn}")
 
 # This dataframe created above now has the results of all the chi-squared tests and the tables of distributions
 
