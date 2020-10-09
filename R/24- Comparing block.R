@@ -26,7 +26,7 @@ key_points <- tibble(x = c(3, 4, 5, 6),
 
 # redoing all clustering with 50 iterations to make sure we have the best of them all!
 
-set.seet(123)  # remember this ensures we get consistent modelling each time
+set.seed(123)  # remember this ensures we get consistent modelling each time
 
 nodeType <- c(rep(1, nrow(df_filter)), rep(2, 14))
 key_models <- key_points %>% 
@@ -160,5 +160,5 @@ all_blocks %>%
 # To look at a table you can access it like this:
 
 all_blocks %>% 
-  filter(x == 6, y == 6) %>%   # Choose the clusters to filter for
-  pull(ref_coi_prop)            # choose which value to check out
+  filter(x == 5, y == 4) %>%   # Choose the clusters to filter for
+  pull(gl_coi_chi)            # choose which value to check out

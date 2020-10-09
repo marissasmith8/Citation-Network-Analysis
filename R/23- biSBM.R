@@ -4,7 +4,7 @@ library(igraph)
 library(ggmosaic)
 library(SPHSUgraphs)
 library(patchwork)
-source("./R/20 - Tidying dataframe to remove duplicates new.R")
+source("./R/20- Tidying dataframe to remove duplicates new.R")
 source("C:/Users/marissa/Documents/Citation-Network-Analysis-New/Citation-Network-Analysis-New/R/biSBMR/biSBMWin.R")
 
 
