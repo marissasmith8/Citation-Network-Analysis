@@ -126,8 +126,9 @@ row_names_dfe_ordered <- dfe_ordered %>% pull(Reference)
 # **Formatting Guideline doc names ----------------------------------------------
 
 reports <- colnames(dfd %>% select(-(Reference)))
-reports_formatted <- gsub("\\.(\\d{4}$)", "\n\\1", reports)  # adding line breaks
-reports_formatted <- gsub("\\.", " ", reports_formatted)  # adding space in one instance
+
+reports_formatted <- gsub("\\.(\\d{4}$)", "\n\\1", reports) # adding line breaks
+reports_formatted <- gsub("\\.", " ", reports_formatted) # adding space in one instance
 
 
 # **filtering and adding other data -------------------------------------------

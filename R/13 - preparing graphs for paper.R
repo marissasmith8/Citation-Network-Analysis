@@ -36,10 +36,10 @@ E(ig_allrefs_so)$color <- "#97979766"
 tkplot(ig_allrefs_so, layout = layout.fruchterman.reingold, canvas.height = 768, canvas.width = 1366)
 
 
-co_ig1 <- tk_coords("3")/400
+co_ig1 <- tk_coords("7")/400
 
 
-svglite::svglite("./graphs/igraph - all refs - coloured - no groups - paper.svg", width = 300/25, height = 150/25)
+svglite::svglite("./graphs/igraph - all refs - coloured - no groups - paper3.svg", width = 300/25, height = 150/25)
 plot(ig_allrefs_so,
      # mark.groups = groups,  # group bubbles
      layout = co_ig1,
@@ -78,9 +78,9 @@ E(ig_fl_so)$color <- "#97979766"
 
 tkplot(ig_fl_so, layout = layout.fruchterman.reingold, canvas.height = 768, canvas.width = 1366)
 
-co_ig2 <- tk_coords("1")/400
+co_ig2 <- tk_coords("8")/400
 
-svglite::svglite("./graphs/igraph - filtered - coloured - paper.svg", width = 300/25, height = 150/25)
+svglite::svglite("./graphs/igraph - filtered - coloured - paper3.svg", width = 300/25, height = 150/25)
 # svg("./graphs/igraph - filtered - coloured - no groups.svg", bg = "#003865")
 plot(ig_fl_so, 
      # mark.groups = groups,  # group bubbles
@@ -99,7 +99,7 @@ dev.off()
 V(ig_fl_so)$color[refs3] <- full_dfe$cn_fill
 
 
-svglite::svglite("./graphs/igraph - filtered - col_conf - paper.svg", width = 300/25, height = 150/25)
+svglite::svglite("./graphs/igraph - filtered - col_conf - paper3.svg", width = 300/25, height = 150/25)
 # svg("./graphs/igraph - filtered - col_conf - paper.svg", bg = "#003865")
 plot(ig_fl_so, 
      # mark.groups = groups,  # group bubbles
@@ -116,7 +116,7 @@ dev.off()
 V(ig_fl_so)$color[refs3] <- full_dfe$st_fill
 
 
-svglite::svglite("./graphs/igraph - filtered - col_stud - paper.svg", width = 300/25, height = 150/25)
+svglite::svglite("./graphs/igraph - filtered - col_stud - paper3.svg", width = 300/25, height = 150/25)
 # svg("./graphs/igraph - filtered - col_stud - paper.svg", bg = "#003865")
 plot(ig_fl_so, 
      # mark.groups = groups,  # group bubbles

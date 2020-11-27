@@ -33,5 +33,5 @@ reference=as.matrix(read.table(textConnection(Input2),
                             header=TRUE,
                             row.names=1))
 
-fisher.test(workspace=260000000, reference,
+fisher.test(simulate.p.value=TRUE, reference,
             alternative = "two.sided")
